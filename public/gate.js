@@ -142,11 +142,14 @@
     if (recovering) { if (view !== "reset") show("reset"); return; }
     if (!me) { if (view === "splash" || view === "pseudo" || view === "done") show("land"); else g.hidden = false; return; }
     if (p && /^user[0-9a-f]{6}$/.test(p.username)) { if (view !== "pseudo") show("pseudo"); return; }
-    g.hidden = true; view = "done";
+    g.hidden = true; view = "done"; var pre = document.getElementById("pre"); if (pre) pre.remove();
   }
   var prev = A.onUser;
   A.onUser = function () { if (prev) prev(); sync(); };
-  sb.auth.onAuthStateChange(function (ev) { if (ev === "PASSWORD_RECOVERY") { recovering = true; setTimeout(sync, 0); } });
+  sb.auth.onAuthStateChange(function (ev, s) { console.log("[clap auth]", ev, s ? "session" : "pas de session"); if (ev === "PASSWORD_RECOVERY") { recovering = true; setTimeout(sync, 0); } });
   if (recovering) show("reset");
+  var qs = new URLSearchParams(location.search), hs = new URLSearchParams(location.hash.replace(/^#/, ""));
+  var oerr = qs.get("error_description") || hs.get("error_description");
+  if (oerr) { history.replaceState(null, "", location.pathname); show("in"); msg("Connexion Google impossible : " + oerr); }
   setTimeout(function () { if (view === "splash") show("land"); }, 6000);
 })();
