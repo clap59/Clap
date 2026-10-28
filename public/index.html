@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clap – le réseau social du cinéma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4eff1;--surface:#fff;--text:#1d1216;--muted:#6f6168;--accent:#d7263d;--gold:#f0a202;--line:rgba(29,18,22,.12);--bar:rgba(255,255,255,.88);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f080b;--surface:#1b1015;--text:#f7ecee;--muted:#a8969d;--accent:#ff4d5e;--gold:#ffc23d;--line:rgba(255,255,255,.12);--bar:rgba(15,8,11,.86);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f080b;--surface:#1b1015;--text:#f7ecee;--muted:#a8969d;--accent:#ff4d5e;--gold:#ffc23d;--line:rgba(255,255,255,.12);--bar:rgba(15,8,11,.86);color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:400 15px/1.45 "DM Sans",system-ui,sans-serif;display:flex;justify-content:center;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{width:100%;max-width:440px;height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;border-inline:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 8px}
+.logo{font:400 32px/1 "Bebas Neue",Impact,sans-serif;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.logo i{width:26px;height:20px;border-radius:3px;background:linear-gradient(135deg,var(--text) 0 38%,var(--accent) 38% 50%,var(--text) 50% 62%,var(--accent) 62% 74%,var(--text) 74%);display:block;transform:rotate(-8deg)}
+.ico{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);font-size:17px}
+.stories{display:flex;gap:14px;padding:4px 16px 12px;overflow-x:auto;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.st{flex:none;width:64px;text-align:center;font-size:12px;color:var(--muted)}
+.ring{width:64px;height:64px;border-radius:50%;padding:3px;background:conic-gradient(var(--gold),var(--accent),var(--gold));margin-bottom:4px}
+.ring span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;border:3px solid var(--bg);font:400 22px "Bebas Neue",sans-serif;color:#fff}
+.st.seen .ring{background:var(--line)}
+.views{flex:1;min-height:0;position:relative}
+.view{position:absolute;inset:0;overflow-y:auto;display:none}
+.view.on{display:block}
+#feed{scroll-snap-type:y mandatory;padding:0 12px}
+.card{scroll-snap-align:start;height:100%;max-height:640px;min-height:480px;margin:0 0 12px;border-radius:22px;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;user-select:none;touch-action:manipulation}
+.card::before{content:"";position:absolute;inset:0;background:var(--g);z-index:0}
+.card::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.88) 0,rgba(0,0,0,.35) 45%,rgba(0,0,0,.05) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");mix-blend-mode:normal}
+.perf{position:absolute;left:8px;top:0;bottom:0;width:8px;z-index:2;background:repeating-linear-gradient(to bottom,transparent 0 10px,rgba(255,255,255,.35) 10px 20px);border-radius:3px;opacity:.7}
+.perf.r{left:auto;right:8px}
+.big{position:absolute;z-index:2;top:12%;left:0;right:0;text-align:center;font:400 clamp(64px,22vw,104px)/.88 "Bebas Neue",Impact,sans-serif;letter-spacing:.02em;padding:0 30px;text-shadow:0 4px 30px rgba(0,0,0,.35);word-break:break-word}
+.big small{display:block;font:500 13px "DM Sans",sans-serif;letter-spacing:.12em;margin-top:12px;opacity:.85}
+.meta{position:relative;z-index:3;padding:0 74px 18px 28px}
+.who{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-weight:700}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--c);border:2px solid #fff}
+.stars{color:var(--gold);letter-spacing:2px;font-size:16px}
+.txt{margin:6px 0 8px;font-size:16px;line-height:1.4}
+.tag{display:inline-block;font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);margin-right:6px}
+.rail{position:absolute;z-index:4;right:10px;bottom:18px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.act{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:700;gap:2px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.act b{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:21px;transition:transform .15s}
+.act:active b{transform:scale(.88)}
+.act.on b{background:var(--accent)}
+.pop{position:absolute;z-index:5;left:50%;top:45%;font-size:96px;transform:translate(-50%,-50%) scale(0);pointer-events:none;opacity:0}
+.pop.go{animation:pop .7s ease-out}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}40%{transform:translate(-50%,-50%) scale(1.15);opacity:1}100%{transform:translate(-50%,-50%) scale(1.3);opacity:0}}
+.pad{padding:4px 16px 24px}
+h2{font:400 28px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;margin:8px 0 12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
+.chip{flex:none;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);font-weight:500}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.po{aspect-ratio:2/3;border-radius:10px;background:var(--g);color:#fff;display:flex;align-items:flex-end;padding:8px;font:400 19px/.95 "Bebas Neue",sans-serif;letter-spacing:.03em;position:relative;overflow:hidden}
+.po::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%)}
+.po span{position:relative;z-index:1}
+.me{text-align:center;padding-top:6px}
+.me .av{width:84px;height:84px;font-size:30px;margin:0 auto 8px;border-color:var(--gold)}
+.nums{display:flex;justify-content:center;gap:28px;margin:14px 0}
+.nums div{font-size:12px;color:var(--muted)}
+.nums b{display:block;font:400 30px/1 "Bebas Neue",sans-serif;color:var(--text);letter-spacing:.03em}
+.ticket{margin:6px 0 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;text-align:left;position:relative}
+.ticket div{padding:14px 16px;flex:1}
+.ticket div+div{border-left:2px dashed var(--line);flex:none;width:96px;text-align:center}
+.ticket strong{font:400 24px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;display:block}
+.ticket em{font-style:normal;color:var(--muted);font-size:13px}
+.bar{display:flex;justify-content:space-around;align-items:center;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--bar);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);padding:4px 14px}
+.tab span{font-size:22px;line-height:1}
+.tab.on{color:var(--text);font-weight:700}
+.plus{width:50px;height:36px;border-radius:12px;background:var(--accent);color:#fff;font-size:24px;display:grid;place-items:center;box-shadow:-3px 0 0 var(--gold)}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-radius:22px 22px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 16px);transform:translateY(105%);transition:transform .28s ease;box-shadow:0 -10px 40px rgba(0,0,0,.35);max-height:70%}
+.sheet.open{transform:none}
+.sheet h3{font:400 22px "Bebas Neue",sans-serif;letter-spacing:.04em;margin-bottom:8px}
+.cm{display:flex;gap:10px;margin:10px 0;font-size:14px}
+.cm .av{width:30px;height:30px;font-size:11px;color:#fff;flex:none;border-color:transparent}
+.cm small{color:var(--muted)}
+.toast{position:absolute;z-index:30;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.film,.compose{position:absolute;inset:0;z-index:15;background:var(--bg);overflow-y:auto;transform:translateY(100%);visibility:hidden;transition:transform .3s ease,visibility 0s .3s}
+.film.open,.compose.open{transform:none;visibility:visible;transition:transform .3s ease}
+.compose{z-index:18}
+.hero{height:360px;position:relative;background:var(--g);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.05) 70%)}
+.hero>*{position:relative}
+.hero h1{font:400 60px/.9 "Bebas Neue",Impact,sans-serif;letter-spacing:.02em}
+.hero p{opacity:.85;margin-top:6px}
+.back{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 10px);left:12px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;backdrop-filter:blur(8px);display:grid;place-items:center;font-size:18px;z-index:2}
+.score{display:flex;align-items:center;gap:14px;margin-top:6px}
+.score b{font:400 54px/1 "Bebas Neue",sans-serif;color:var(--gold)}
+.score small{color:var(--muted)}
+.btns{display:flex;gap:8px;margin:14px 0 6px}
+.btn{flex:1;padding:11px 8px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:14px}
+.btn.on{border-color:var(--gold);color:var(--gold)}
+.btn.main{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rv{padding:14px 0;border-top:1px solid var(--line)}
+.rv p{margin-top:4px}
+.cbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;background:var(--bar);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.cbar .btn{flex:none;padding:8px 18px}
+.lbl{display:block;font-weight:700;margin:16px 0 6px}
+.compose select,.compose textarea{width:100%;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit}
+.compose textarea{min-height:130px;resize:none}
+.pick{display:flex;gap:6px}
+.pick button{font-size:40px;line-height:1;color:var(--line);transition:transform .12s}
+.pick button.on{color:var(--gold)}
+.pick button:active{transform:scale(.85)}
+.cnt{text-align:right;font-size:12px;color:var(--muted);margin-top:4px}
+.hf,.pick button.half{font-style:normal;background:linear-gradient(90deg,var(--gold) 50%,rgba(128,128,128,.45) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.scores{display:flex;align-items:center;gap:24px;padding:18px 0 6px}
+.scores small{color:var(--muted);font-size:12px}
+.ring2{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;position:relative;margin-bottom:4px}
+.ring2::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--bg)}
+.ring2 b{position:relative;font:400 32px "Bebas Neue",sans-serif}
+.avg{font:400 52px/1 "Bebas Neue",sans-serif;color:var(--gold)}
+.avg small{font-size:20px;color:var(--muted)}
+.syn{margin:10px 0 4px;line-height:1.55}
+.dl div{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line)}
+.dl span{color:var(--muted)}
+.dl b{font-weight:500;text-align:right}
+.cast{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.cm2{flex:none;width:78px;text-align:center;font-size:12px;line-height:1.25}
+.cm2 div{width:64px;height:64px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;color:#fff;font:400 24px "Bebas Neue",sans-serif}
+.rx{display:flex;gap:18px;margin-top:6px;color:var(--muted);font-size:13px}
+.rx .on{color:var(--accent);font-weight:700}
+.rp{display:flex;gap:8px;margin:8px 0 0 18px;font-size:14px;line-height:1.35}
+.rp .av{width:26px;height:26px;font-size:10px;color:#fff;flex:none;border-color:transparent}
+.rf{display:none;gap:8px;margin:8px 0 0 18px}
+.rf.open{display:flex}
+.rf button{font-weight:700;color:var(--accent)}
+.nl{display:flex;gap:8px;margin-top:10px}
+.nl input,.rf input{flex:1;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px;font:inherit}
+.nl .btn{flex:none;padding:8px 16px}
+.ph{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:8px 0 2px}
+.cov{width:56px;height:56px;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;flex:none;background:var(--line)}
+.cov i{background:var(--g)}
+.lrow{display:flex;align-items:center;gap:12px;width:100%;padding:7px 0;text-align:left}
+.lrow small{color:var(--muted)}
+.lrow .ck{margin-left:auto;font-size:22px;color:var(--accent)}
+.lrow.on .ck{color:var(--gold)}
+.cov.plus2{display:grid;place-items:center;font-size:28px;border:2px dashed var(--line);background:none}
+#lsheet{overflow-y:auto}
+.cl{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mo{font-weight:700;font-size:13px;opacity:.85;padding:2px 0 6px}
+.rv .mo{color:var(--accent);opacity:1}
+@media (prefers-reduced-motion:reduce){.film,.compose{transition:none}.sheet,.toast{transition:none}.pop.go{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="logo"><i></i>CLAP</div>
+    <button class="ico" id="theme" aria-label="Changer de thème">◐</button>
+  </header>
+  <div class="stories" id="stories"></div>
+  <main class="views">
+    <section class="view on" id="feed" aria-label="Fil"></section>
+    <section class="view" id="disc"><div class="pad">
+      <h2>À découvrir</h2>
+      <div class="chips" id="chips"></div>
+      <div class="grid" id="grid"></div>
+    </div></section>
+    <section class="view" id="prof"><div class="pad me">
+      <div class="av" style="--c:#7b2cbf">LI</div>
+      <h2 style="margin:0">Lina Moreau</h2>
+      <p style="color:var(--muted)">Cinéphile de Dunkerque · plus de séances que de sommeil</p>
+      <div class="nums"><div><b>312</b>films vus</div><div><b>1,2k</b>abonnés</div><div><b>87</b>critiques</div></div>
+      <div class="ticket"><div><em>Ma carte cinéphile 2026</em><strong>Thriller &amp; science-fiction</strong><em>Note moyenne 3,8 ★</em></div><div><em>Séances</em><strong>148</strong></div></div>
+      <h2 style="text-align:left">Mes listes</h2><div id="lists" style="text-align:left"></div>
+      <h2 style="text-align:left">Mes 4 favoris</h2>
+      <div class="grid" id="favs" style="grid-template-columns:repeat(4,1fr)"></div>
+    </div></section>
+  </main>
+  <nav class="bar">
+    <button class="tab on" data-v="feed"><span>▶</span>Fil</button>
+    <button class="tab" data-v="disc"><span>✦</span>Découvrir</button>
+    <button class="plus" id="add" aria-label="Poster une critique">+</button>
+    <button class="tab" id="seance"><span>🎟</span>Séances</button>
+    <button class="tab" data-v="prof"><span>●</span>Profil</button>
+  </nav>
+  <section class="film" id="film" aria-label="Fiche du film"></section>
+  <section class="compose" id="compose" aria-label="Nouvelle critique"></section>
+  <div class="sheet" id="sheet" role="dialog" aria-label="Commentaires">
+    <h3>Commentaires</h3>
+    <div class="cm"><div class="av" style="background:#e76f51">MA</div><div><b>Malo</b> <small>il y a 3 min</small><br>La scène finale, j’en suis encore sonné.</div></div>
+    <div class="cm"><div class="av" style="background:#2a9d8f">SO</div><div><b>Sofia</b> <small>il y a 12 min</small><br>On se le revoit samedi en séance à deux ?</div></div>
+    <div class="cm"><div class="av" style="background:#6d597a">JU</div><div><b>Jules</b> <small>il y a 1 h</small><br>Trop sévère à mon goût, mais bien argumenté.</div></div>
+    <button class="chip" id="close" style="margin-top:6px">Fermer</button>
+  </div>
+  <div class="sheet" id="lsheet" role="dialog" aria-label="Listes"></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script>
+var films=[
+ {t:"Dune",y:2021,g:"linear-gradient(160deg,#f4a259,#bc4b51 55%,#3d1c28)",u:"Théo",c:"#e76f51",n:5,r:"Un opéra de sable et de silence. Vu en salle, le son m’a traversé la poitrine.",tg:["SF","Salle obligatoire"],l:2840,m:212},
+ {t:"Parasite",y:2019,g:"linear-gradient(160deg,#52b788,#1b4332 60%,#081c15)",u:"Inès",c:"#2a9d8f",n:5,r:"Le meilleur virage de ton de l’histoire du cinéma. Aucun doute.",tg:["Thriller","Culte"],l:5120,m:430},
+ {t:"Drive",y:2011,g:"linear-gradient(160deg,#ff6b9d,#7b2cbf 55%,#10002b)",u:"Malo",c:"#7b2cbf",n:4,r:"Néons, silence, synthés. Il parle à peine et pourtant tout est dit.",tg:["Néo-noir","Bande-son"],l:1960,m:98},
+ {t:"Amélie",y:2001,g:"linear-gradient(160deg,#ffd166,#e63946 60%,#6a040f)",u:"Sofia",c:"#e5989b",n:4,r:"Un film doudou, rouge et vert, parfait pour un dimanche pluvieux.",tg:["Feel good","Paris"],l:3310,m:156},
+ {t:"Interstellar",y:2014,g:"linear-gradient(160deg,#90e0ef,#1d3557 55%,#03071e)",u:"Jules",c:"#4361ee",n:5,r:"J’ai pleuré devant un trou noir. Je n’ai aucune honte.",tg:["SF","Orgue"],l:4075,m:341}
+];
+var ini=function(s){return s.slice(0,2).toUpperCase()};
+var stories=document.getElementById("stories");
+stories.innerHTML='<div class="st"><div class="ring" style="background:var(--line)"><span style="background:var(--surface);color:var(--text)">+</span></div>Ma séance</div>'+
+ films.map(function(f,i){return '<div class="st'+(i>2?' seen':'')+'"><div class="ring"><span style="background:'+f.c+'">'+ini(f.u)+'</span></div>'+f.u+'</div>'}).join("");
+var feed=document.getElementById("feed");
+function cardHTML(f,i){
+ return '<article class="card" data-i="'+i+'" style="--g:'+f.g+'"><div class="perf"></div><div class="perf r"></div>'+
+ '<div class="big">'+f.t.toUpperCase()+'<small>'+f.y+'</small></div><div class="pop">♥</div>'+
+ '<div class="meta"><div class="who"><div class="av" style="--c:'+f.c+'">'+ini(f.u)+'</div>'+f.u+'<button class="open" style="margin-left:auto;font-size:13px;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px;backdrop-filter:blur(6px)">'+f.t+' ›</button></div>'+
+ '<div class="stars">'+stars(f.n)+'</div>'+more(f.r,"txt")+f.tg.map(function(t){return '<span class="tag">'+t+'</span>'}).join("")+'</div>'+
+ '<div class="rail"><button class="act like"><b>♥</b><span>'+f.l.toLocaleString("fr-FR")+'</span></button>'+
+ '<button class="act cmt"><b>💬</b><span>'+f.m+'</span></button>'+
+ '<button class="act sv"><b>🔖</b><span>Voir</span></button>'+
+ '<button class="act sh"><b>↗</b><span>Partager</span></button></div></article>'}
+feed.innerHTML=films.map(cardHTML).join("");
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(function(){t.classList.remove("on")},1800)}
+function like(card,force){var f=films[card.dataset.i],b=card.querySelector(".like");
+ if(force&&b.classList.contains("on"))return;
+ var on=b.classList.toggle("on");f.l+=on?1:-1;b.querySelector("span").textContent=f.l.toLocaleString("fr-FR")}
+feed.addEventListener("click",function(e){
+ var card=e.target.closest(".card");if(!card)return;
+ if(e.target.closest(".open")){openFilm(films[card.dataset.i].t);return}
+ var a=e.target.closest(".act");
+ if(a){if(a.classList.contains("like"))like(card);
+  else if(a.classList.contains("cmt"))openFilm(films[card.dataset.i].t);
+  else if(a.classList.contains("sv")){var o=a.classList.toggle("on");toast(o?"Ajouté à ta liste « À voir »":"Retiré de ta liste")}
+  else toast("Lien de la critique copié");return}
+ var now=Date.now();
+ if(card._t&&now-card._t<320){like(card,true);var p=card.querySelector(".pop");p.classList.remove("go");void p.offsetWidth;p.classList.add("go")}
+ card._t=now});
+var chips=["Pour toi","Thriller","SF","Comédie","Animation","Classiques"];
+document.getElementById("chips").innerHTML=chips.map(function(c,i){return '<button class="chip'+(i?'':' on')+'">'+c+'</button>'}).join("");
+document.getElementById("chips").addEventListener("click",function(e){var c=e.target.closest(".chip");if(!c)return;
+ this.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on")});c.classList.add("on")});
+var moreFilms=[["Alien","linear-gradient(160deg,#6c757d,#212529)"],["Mad Max","linear-gradient(160deg,#fca311,#7f2704)"],["Blade Runner","linear-gradient(160deg,#00b4d8,#240046)"],["Amadeus","linear-gradient(160deg,#b5179e,#3c096c)"],["Ratatouille","linear-gradient(160deg,#f77f00,#9d0208)"],["Moonlight","linear-gradient(160deg,#4cc9f0,#3a0ca3)"]];
+var all=films.map(function(f){return [f.t,f.g]}).concat(moreFilms);
+var po=function(a){return '<button class="po" data-t="'+a[0]+'" style="--g:'+a[1]+'"><span>'+a[0].toUpperCase()+'</span></button>'};
+document.getElementById("grid").innerHTML=all.map(po).join("");
+document.getElementById("favs").innerHTML=all.slice(0,4).map(po).join("");
+function show(v){document.querySelectorAll(".view").forEach(function(s){s.classList.toggle("on",s.id===v)});
+ document.querySelectorAll(".tab[data-v]").forEach(function(t){t.classList.toggle("on",t.dataset.v===v)})}
+document.querySelectorAll(".tab[data-v]").forEach(function(t){t.addEventListener("click",function(){show(t.dataset.v)})});
+document.getElementById("seance").addEventListener("click",function(){toast("Bientôt : organise une séance avec tes amis")});
+document.getElementById("add").addEventListener("click",function(){openCompose()});
+document.getElementById("close").addEventListener("click",function(){document.getElementById("sheet").classList.remove("open")});
+var fEl=document.getElementById("film"),cEl=document.getElementById("compose");
+var info={"Dune":["2021","Denis Villeneuve","2 h 35"],"Parasite":["2019","Bong Joon-ho","2 h 12"],"Drive":["2011","Nicolas Winding Refn","1 h 40"],"Amélie":["2001","Jean-Pierre Jeunet","2 h 02"],"Interstellar":["2014","Christopher Nolan","2 h 49"],"Alien":["1979","Ridley Scott","1 h 57"],"Mad Max":["2015","George Miller","2 h 00"],"Blade Runner":["1982","Ridley Scott","1 h 57"],"Amadeus":["1984","Miloš Forman","2 h 40"],"Ratatouille":["2007","Brad Bird","1 h 51"],"Moonlight":["2016","Barry Jenkins","1 h 51"]};
+var tagList=["Chef-d’œuvre","Coup de cœur","Pleuré","Sans spoil","Bande-son","À voir en salle","Décevant","Surprenant"];
+var cs={n:0,tags:[]};
+function stars(n){var s="",i;for(i=1;i<=5;i++)s+=n>=i?"★":(n>=i-.5?'<i class="hf">★</i>':"☆");return s}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function gOf(t){var a=all.filter(function(x){return x[0]===t})[0];return a?a[1]:"linear-gradient(160deg,#6c757d,#212529)"}
+function openFilm(t){
+ var i=info[t]||["","Réalisateur à venir",""],rv=films.filter(function(f){return f.t===t});
+ var avg=rv.length?rv.reduce(function(s,f){return s+f.n},0)/rv.length:0;
+ fEl.innerHTML='<div class="hero" style="--g:'+gOf(t)+'"><button class="back" aria-label="Retour">←</button><h1>'+t.toUpperCase()+'</h1><p>'+i.filter(Boolean).join(" – ")+'</p></div>'+
+ '<div class="pad"><div class="score"><b>'+(avg?avg.toFixed(1).replace(".",","):"–")+'</b><div><div class="stars">'+stars(Math.round(avg))+'</div><small>'+rv.length+' critique'+(rv.length>1?'s':'')+' sur Clap</small></div></div>'+
+ '<div class="btns"><button class="btn" data-a="seen">👁 Vu</button><button class="btn" data-a="want">🔖 À voir</button><button class="btn main" data-a="write">✎ Critiquer</button></div>'+
+ '<h2>Critiques</h2>'+(rv.length?rv.map(function(f){return '<div class="rv"><div class="who"><div class="av" style="--c:'+f.c+';color:#fff">'+ini(f.u)+'</div>'+f.u+'</div><div class="stars">'+stars(f.n)+'</div><p>'+f.r+'</p></div>'}).join(""):'<p style="color:var(--muted)">Aucune critique pour l’instant. Lance-toi, sois la première personne à donner ton avis.</p>')+'</div>';
+ fEl._t=t;fEl.scrollTop=0;fEl.classList.add("open")}
+fEl.addEventListener("click",function(e){
+ if(e.target.closest(".back"))return fEl.classList.remove("open");
+ var b=e.target.closest("[data-a]");if(!b)return;
+ if(b.dataset.a==="write")return openCompose(fEl._t);
+ var on=b.classList.toggle("on");toast(b.dataset.a==="seen"?(on?"Marqué comme vu":"Retiré de tes films vus"):(on?"Ajouté à ta liste « À voir »":"Retiré de ta liste"))});
+function openCompose(t){
+ cs={n:0,tags:[]};
+ cEl.innerHTML='<div class="cbar"><button class="ico" data-a="x" aria-label="Fermer">✕</button><b>Nouvelle critique</b><button class="btn main" data-a="pub">Publier</button></div><div class="pad">'+
+ '<label class="lbl" for="cf">Film</label><select id="cf">'+all.map(function(a){return '<option>'+a[0]+'</option>'}).join("")+'</select>'+
+ '<p class="lbl">Ta note</p><div class="pick">'+[1,2,3,4,5].map(function(n){return '<button data-n="'+n+'" aria-label="'+n+' étoile'+(n>1?'s':'')+'">★</button>'}).join("")+'</div>'+
+ '<label class="lbl" for="ct">Ta critique</label><textarea id="ct" maxlength="200" placeholder="Ton avis en quelques mots, comme à la sortie de la salle."></textarea><div class="cnt" id="cc">0 / 200</div>'+
+ '<p class="lbl">Tags (3 maximum)</p><div class="chips" style="flex-wrap:wrap">'+tagList.map(function(g){return '<button class="chip" data-g="'+g+'">'+g+'</button>'}).join("")+'</div></div>';
+ if(t)document.getElementById("cf").value=t;
+ cEl.scrollTop=0;cEl.classList.add("open")}
+cEl.addEventListener("input",function(e){if(e.target.id==="ct")document.getElementById("cc").textContent=e.target.value.length+" caractère"+(e.target.value.length>1?"s":"")});
+cEl.addEventListener("click",function(e){
+ var p=e.target.closest(".pick button");
+ if(p){var r=p.getBoundingClientRect();cs.n=+p.dataset.n-(e.clientX-r.left<r.width/2?.5:0);cEl.querySelectorAll(".pick button").forEach(function(b){var n=+b.dataset.n;b.classList.toggle("on",n<=cs.n);b.classList.toggle("half",n-.5===cs.n)});document.getElementById("pv").textContent=String(cs.n).replace(".",",")+" / 5";return}
+ var c=e.target.closest(".chip");
+ if(c){var g=c.dataset.g,k=cs.tags.indexOf(g);
+  if(k>-1){cs.tags.splice(k,1);c.classList.remove("on")}else if(cs.tags.length<3){cs.tags.push(g);c.classList.add("on")}else toast("3 tags maximum");return}
+ var a=e.target.closest("[data-a]");if(!a)return;
+ if(a.dataset.a==="x")return cEl.classList.remove("open");
+ var txt=document.getElementById("ct").value.trim();
+ if(!cs.n)return toast("Choisis une note");
+ 
+ var t=document.getElementById("cf").value;
+ var f={t:t,y:info[t]?info[t][0]:"",g:cs.p?'url('+cs.p+') center/cover':gOf(t),u:"Lina",c:"#7b2cbf",n:cs.n,r:esc(txt),tg:cs.tags.length?cs.tags:["Nouveau"],l:0,m:0,p:cs.p||"",rp:[]};
+ films.push(f);
+ feed.insertAdjacentHTML("afterbegin",cardHTML(f,films.length-1));
+ cEl.classList.remove("open");fEl.classList.remove("open");show("feed");feed.scrollTop=0;toast("Critique publiée 🎬")});
+["grid","favs"].forEach(function(id){document.getElementById(id).addEventListener("click",function(e){var p=e.target.closest(".po");if(p)openFilm(p.dataset.t)})});
+var det={
+'Dune':{d:'15 septembre 2021 (France)',c:['Timothée Chalamet','Zendaya','Rebecca Ferguson','Oscar Isaac'],g:'Science-fiction, Aventure',s:'Paul Atréides part sur Arrakis, une planète désert qui détient la ressource la plus précieuse de l’univers.',p:83,a:4.1,k:12450},
+'Parasite':{d:'5 juin 2019 (France)',c:['Song Kang-ho','Lee Sun-kyun','Cho Yeo-jeong','Choi Woo-shik'],g:'Thriller, Comédie noire',s:'Une famille pauvre s’infiltre peu à peu chez une famille riche. Rien ne se passe comme prévu.',p:99,a:4.5,k:20310},
+'Drive':{d:'5 octobre 2011 (France)',c:['Ryan Gosling','Carey Mulligan','Bryan Cranston','Albert Brooks'],g:'Thriller, Néo-noir',s:'Cascadeur le jour, pilote de fuite la nuit, un homme silencieux protège sa voisine.',p:93,a:4.0,k:9870},
+'Amélie':{d:'25 avril 2001 (France)',c:['Audrey Tautou','Mathieu Kassovitz','Rufus','Jamel Debbouze'],g:'Comédie, Romance',s:'Une serveuse de Montmartre décide de rendre la vie des autres un peu plus belle.',p:89,a:4.2,k:15200},
+'Interstellar':{d:'5 novembre 2014 (France)',c:['Matthew McConaughey','Anne Hathaway','Jessica Chastain','Michael Caine'],g:'Science-fiction, Drame',s:'Des astronautes traversent un trou de ver pour trouver une nouvelle planète à l’humanité.',p:73,a:4.3,k:18420},
+'Alien':{d:'12 septembre 1979 (France)',c:['Sigourney Weaver','Tom Skerritt','John Hurt','Ian Holm'],g:'Science-fiction, Horreur',s:'L’équipage d’un cargo spatial réveille une créature qu’il n’aurait jamais dû ramener à bord.',p:98,a:4.3,k:11030},
+'Mad Max':{d:'14 mai 2015 (France)',c:['Tom Hardy','Charlize Theron','Nicholas Hoult','Zoë Kravitz'],g:'Action, Science-fiction',s:'Dans le désert, Furiosa fuit un tyran avec l’aide de Max. Deux heures de course-poursuite.',p:97,a:4.2,k:13560},
+'Blade Runner':{d:'25 juin 1982 (États-Unis)',c:['Harrison Ford','Rutger Hauer','Sean Young','Daryl Hannah'],g:'Science-fiction, Néo-noir',s:'Un détective traque des andïdes qui se font passer pour des humains dans un Los Angeles pluvieux.',p:89,a:4.0,k:8240},
+'Amadeus':{d:'19 septembre 1984 (États-Unis)',c:['F. Murray Abraham','Tom Hulce','Elizabeth Berridge','Simon Callow'],g:'Drame, Biopic',s:'Le compositeur Salieri raconte sa jalousie envers le génie de Mozart.',p:94,a:4.2,k:6120},
+'Ratatouille':{d:'1er août 2007 (France)',c:['Patton Oswalt','Lou Romano','Ian Holm','Peter O’Toole'],g:'Animation, Comédie',s:'Un rat qui rêve de cuisiner s’invite dans les cuisines d’un grand restaurant parisien.',p:96,a:4.3,k:10980},
+'Moonlight':{d:'1er février 2017 (France)',c:['Trevante Rhodes','André Holland','Janelle Monáe','Mahershala Ali'],g:'Drame',s:'Trois chapitres de la vie d’un garçon de Miami qui cherche qui il est.',p:98,a:4.1,k:5340}};
+films[0].rp=[{u:'Malo',c:'#7b2cbf',t:'Même ressenti, la salle vibrait.'}];
+films[1].rp=[{u:'Sofia',c:'#e5989b',t:'Le passage du sous-sol, impossible à oublier.'},{u:'Jules',c:'#4361ee',t:'Je l’ai revu 3 fois, il reste aussi fort.'}];
+films.push({t:'Dune',y:2021,g:'',u:'Camille',c:'#2a9d8f',n:3.5,r:'Magnifique visuellement, le son est incroyable et Villeneuve filme le désert comme personne. Mais je suis restée un peu à distance des personnages, et le rythme m’a semblé trop sage pour un film aussi ambitieux. J’ai hâte de voir la suite pour juger l’ensemble.',tg:[],l:41,m:0,rp:[{u:'Théo',c:'#e76f51',t:'Attends la deuxième partie, elle change tout.'}]});
+function ii(n){var p=n.split(' ');return p[0][0]+p[p.length-1][0]}
+function rvHTML(f,k){
+ return '<div class="rv"><div class="who"><div class="av" style="--c:'+f.c+';color:#fff">'+ini(f.u)+'</div>'+f.u+'</div><div class="stars">'+stars(f.n)+'</div>'+(f.p?'<img class="ph" src="'+f.p+'" alt="">':'')+more(f.r,'')+
+ '<div class="rx"><button class="rl'+(f.lk?' on':'')+'" data-i="'+k+'">♥ '+f.l+'</button><button class="rr" data-i="'+k+'">💬 '+(f.rp||[]).length+' Répondre</button></div>'+
+ (f.rp||[]).map(function(r){return '<div class="rp"><div class="av" style="--c:'+r.c+'">'+ini(r.u)+'</div><div><b>'+r.u+'</b><br>'+r.t+'</div></div>'}).join('')+
+ '<div class="rf" id="rf'+k+'"><input maxlength="140" placeholder="Répondre à '+f.u+'…"><button class="rs" data-i="'+k+'">Envoyer</button></div></div>'}
+function paintRv(){var t=fEl._t,h=films.map(function(f,k){return f.t===t?rvHTML(f,k):''}).join('');document.getElementById('rvs').innerHTML=h||'<p style="color:var(--muted)">Aucune critique pour l’instant. Sois la première personne à donner ton avis.</p>'}
+function openFilm(t){
+ var i=info[t]||['','',''],d=det[t]||{d:'Date à venir',c:[],g:'',s:'Fiche détaillée bientôt disponible.',p:0,a:0,k:0};
+ fEl._t=t;
+ fEl.innerHTML='<div class="hero" style="--g:'+gOf(t)+'"><button class="back" aria-label="Retour">←</button><h1>'+t.toUpperCase()+'</h1><p>'+[i[0],i[2],d.g].filter(Boolean).join(' – ')+'</p></div><div class="pad">'+
+ '<div class="scores"><div style="text-align:center"><div class="ring2" style="--p:'+d.p+'"><b>'+d.p+'%</b></div><small>Avis positifs</small></div>'+
+ '<div><div class="avg">'+String(d.a).replace('.',',')+'<small>/5</small></div><div class="stars">'+stars(Math.round(d.a*2)/2)+'</div><small>'+d.k.toLocaleString('fr-FR')+' notes</small></div></div>'+
+ '<div class="btns"><button class="btn" data-a="seen">👁 Vu</button><button class="btn" data-l="1">＋ Liste</button><button class="btn main" data-a="write">✎ Critiquer</button></div>'+
+ '<p class="syn">'+d.s+'</p><h2>Infos</h2><div class="dl"><div><span>Sortie</span><b>'+d.d+'</b></div><div><span>Réalisation</span><b>'+i[1]+'</b></div><div><span>Durée</span><b>'+i[2]+'</b></div><div><span>Genres</span><b>'+d.g+'</b></div></div>'+
+ '<h2>Casting</h2><div class="cast">'+d.c.map(function(n,k){return '<div class="cm2"><div style="background:hsl('+(k*67+10)+',55%,40%)">'+ii(n)+'</div>'+n+'</div>'}).join('')+'</div>'+
+ '<h2>Critiques</h2><div id="rvs"></div></div>';
+ paintRv();fEl.scrollTop=0;fEl.classList.add('open')}
+fEl.addEventListener('click',function(e){
+ var el=e.target.closest('.rl,.rr,.rs,[data-l]');if(!el)return;
+ if(el.dataset.l)return showAdd(fEl._t);
+ var f=films[el.dataset.i];
+ if(el.classList.contains('rl')){f.lk=!f.lk;f.l+=f.lk?1:-1;paintRv()}
+ else if(el.classList.contains('rr')){var r=document.getElementById('rf'+el.dataset.i);r.classList.toggle('open');if(r.classList.contains('open'))r.firstChild.focus()}
+ else{var v=document.getElementById('rf'+el.dataset.i).firstChild.value.trim();if(!v)return toast('Écris ta réponse');(f.rp=f.rp||[]).push({u:'Lina',c:'#7b2cbf',t:esc(v)});paintRv();toast('Réponse envoyée')}});
+function openCompose(t){
+ cs={n:0,tags:[],p:''};
+ cEl.innerHTML='<div class="cbar"><button class="ico" data-a="x" aria-label="Fermer">✕</button><b>Nouvelle critique</b><button class="btn main" data-a="pub">Publier</button></div><div class="pad">'+
+ '<label class="lbl" for="cf">Film</label><select id="cf">'+all.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select>'+
+ '<p class="lbl">Ta note <span id="pv" style="color:var(--gold)"></span></p><div class="pick">'+[1,2,3,4,5].map(function(n){return '<button data-n="'+n+'" aria-label="Note '+n+'">★</button>'}).join('')+'</div><small style="color:var(--muted)">Touche la moitié gauche d’une étoile pour une demi-note.</small>'+
+ '<label class="lbl" for="ct">Ta critique</label><textarea id="ct" placeholder="Optionnel : ton avis, aussi long que tu veux."></textarea><div class="cnt" id="cc">0 caractère</div>'+
+ '<button class="btn" data-p="1" style="width:100%;margin-top:6px">📷 Ajouter une photo</button><input type="file" id="ph" accept="image/*" hidden><img id="pp" class="ph" alt="Aperçu" hidden>'+
+ '<p class="lbl">Tags (3 maximum)</p><div class="chips" style="flex-wrap:wrap">'+tagList.map(function(g){return '<button class="chip" data-g="'+g+'">'+g+'</button>'}).join('')+'</div></div>';
+ if(t)document.getElementById('cf').value=t;
+ cEl.scrollTop=0;cEl.classList.add('open')}
+cEl.addEventListener('click',function(e){if(e.target.closest('[data-p]'))document.getElementById('ph').click()});
+cEl.addEventListener('change',function(e){if(e.target.id!=='ph')return;var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){cs.p=r.result;var im=document.getElementById('pp');im.src=r.result;im.hidden=false};r.readAsDataURL(f)});
+var ls=document.getElementById('lsheet');
+var lists=[{n:'Soirée frissons',f:['Alien','Parasite','Drive']},{n:'Films doudou',f:['Amélie','Ratatouille']},{n:'À voir un jour',f:[]}];
+function cov(l){var c='';for(var k=0;k<4;k++)c+='<i style="--g:'+(l.f[k]?gOf(l.f[k]):'var(--line)')+'"></i>';return '<div class="cov">'+c+'</div>'}
+function cnt(l){return l.f.length+' film'+(l.f.length>1?'s':'')}
+function paintLists(){document.getElementById('lists').innerHTML=lists.map(function(l,k){return '<div class="lrow" data-k="'+k+'">'+cov(l)+'<div><b>'+l.n+'</b><br><small>'+cnt(l)+'</small></div></div>'}).join('')+'<button class="lrow" data-new="1"><span class="cov plus2">+</span><b>Nouvelle liste</b></button>'}
+function showAdd(t){
+ ls.innerHTML='<h3>'+(t?'Ajouter à une liste':'Nouvelle liste')+'</h3>'+(t?lists.map(function(l,k){var on=l.f.indexOf(t)>-1;return '<button class="lrow'+(on?' on':'')+'" data-add="'+k+'">'+cov(l)+'<div><b>'+l.n+'</b><br><small>'+cnt(l)+'</small></div><span class="ck">'+(on?'✓':'+')+'</span></button>'}).join(''):'')+
+ '<div class="nl"><input id="nln" maxlength="30" placeholder="Nom de la liste, ex : Soirée pop-corn"><button class="btn main" data-mk="1">Créer</button></div><button class="chip" data-x="1" style="margin-top:10px">Terminer</button>';
+ ls.dataset.t=t||'';ls.classList.add('open')}
+ls.addEventListener('click',function(e){
+ var t=ls.dataset.t,a=e.target.closest('[data-add]'),m=e.target.closest('[data-mk]');
+ if(e.target.closest('[data-x]'))return ls.classList.remove('open');
+ if(a){var l=lists[a.dataset.add],k=l.f.indexOf(t);if(k>-1)l.f.splice(k,1);else l.f.push(t);toast(k>-1?'Retiré de « '+l.n+' »':'Ajouté à « '+l.n+' »');showAdd(t);paintLists()}
+ if(m){var n=esc(document.getElementById('nln').value.trim());if(!n)return toast('Donne un nom à ta liste');lists.push({n:n,f:t?[t]:[]});toast('Liste « '+n+' » créée');paintLists();if(t)showAdd(t);else ls.classList.remove('open')}});
+document.getElementById('lists').addEventListener('click',function(e){var r=e.target.closest('.lrow');if(!r)return;if(r.dataset.new)return showAdd('');var l=lists[r.dataset.k];toast(l.f.length?l.f.join(', '):'Liste vide pour l’instant')});
+paintLists();
+function more(r,c){var L=r.length>140;return '<p class="'+c+(L?' cl':'')+'">'+r+'</p>'+(L?'<button class="mo">Afficher plus…</button>':'')}
+document.addEventListener('click',function(e){var b=e.target.closest('.mo');if(!b)return;e.stopPropagation();var p=b.previousElementSibling;b.textContent=p.classList.toggle('cl')?'Afficher plus…':'Afficher moins'},true);
+var root=document.documentElement;
+document.getElementById("theme").addEventListener("click",function(){
+ var dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+ root.dataset.theme=dark?"light":"dark"});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="tmdb.js"></script>
+<script src="auth.js"></script>
+<script src="social.js"></script>
+</body>
+</html>
