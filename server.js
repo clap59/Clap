@@ -25,7 +25,7 @@ const route = (path, fn) => app.get(path, async (req, res) => {
   try { res.json(await fn(req)); } catch (e) { console.error(e.message); res.status(502).json({ error: e.message }); }
 });
 
-route("/api/trending", () => tmdb("/trending/movie/week"));
+route("/api/trending", (req) => tmdb("/trending/movie/week", { page: req.query.page || 1 }));
 route("/api/search", (req) => tmdb("/search/movie", { query: req.query.q || "" }));
 route("/api/movie/:id", (req) => tmdb("/movie/" + encodeURIComponent(req.params.id), {
   append_to_response: "credits,videos,similar,watch/providers",

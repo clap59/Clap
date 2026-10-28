@@ -35,3 +35,9 @@ La clé de `public/config.js` est la clé « anon » : elle est publique par con
 3. Dans *Environment*, ajoute `TMDB_KEY` (ton jeton TMDB) et `NODE_VERSION` = `22`.
 4. Une fois en ligne, dans Supabase : *Authentication > URL Configuration*, mets ton adresse Render dans **Site URL**.
 Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier chargement peut prendre ~30 secondes.
+
+## Connexion obligatoire, Google et mot de passe oublié
+**Google** : sur console.cloud.google.com, crée un projet, configure l'écran de consentement OAuth (Externe, nom « Clap »), puis *Identifiants > Créer des identifiants > ID client OAuth > Application Web*. Dans « URI de redirection autorisés », ajoute `https://kqqmklvfghcolctspgca.supabase.co/auth/v1/callback`. Copie l'ID client et la clé secrète, puis dans Supabase : *Authentication > Sign In / Providers > Google*, active-le et colle-les.
+**Adresses autorisées** : Supabase > *Authentication > URL Configuration* : Site URL = ton adresse Render ; dans Redirect URLs ajoute `https://TON-SITE.onrender.com/**` et `http://localhost:3000/**`.
+**Mot de passe** : Supabase > *Authentication > Sign In / Providers > Email* : longueur minimale 12 et exigences (minuscules, majuscules, chiffres, symboles) pour que les règles soient aussi appliquées côté serveur.
+**Emails** : l'envoi par défaut de Supabase est très limité. Avant d'inviter des amis, configure un SMTP (ex. Resend ou Brevo, offres gratuites) dans *Authentication > Emails > SMTP Settings*.

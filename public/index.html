@@ -370,11 +370,13 @@ document.getElementById("theme").addEventListener("click",function(){
  var dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
  root.dataset.theme=dark?"light":"dark"});
 </script>
+<script>window.__REC=/type=recovery/.test(location.hash);</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="tmdb.js"></script>
 <script src="auth.js"></script>
 <script src="social.js"></script>
 <script src="real.js"></script>
+<script src="gate.js"></script>
 </body>
 </html>
