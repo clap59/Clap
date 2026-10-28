@@ -19,7 +19,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 1. Dans Supabase, ouvre *SQL Editor > New query*, colle tout le contenu de `supabase.sql` et clique *Run*.
 2. Pendant le développement, va dans *Authentication > Providers > Email* et désactive **Confirm email** (sinon chaque inscription demande de cliquer sur un mail).
 3. **Abonnements** : colle aussi `supabase-2-abonnements.sql` dans le SQL Editor et clique *Run*.
-4. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+4. **Listes** : colle aussi `supabase-3-listes.sql` et clique *Run*.
+5. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir

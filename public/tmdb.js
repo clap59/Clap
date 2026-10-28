@@ -46,7 +46,7 @@
     }
   };
   function render(m) {
-    reg(m); fEl._t = m.title; fEl._id = m.id;
+    reg(m); fEl._t = m.title; fEl._id = m.id; fEl._p = m.poster_path;
     var crew = m.credits.crew || [], cast = (m.credits.cast || []).slice(0, 12);
     var dir = crew.filter(function (c) { return c.job === "Director"; }).map(function (c) { return c.name; }).join(", ") || "–";
     var vids = (m.videos && m.videos.results) || [];

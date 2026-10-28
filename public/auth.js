@@ -115,7 +115,7 @@
     }
     var r = await sb.from("reviews").upsert({ tmdb_id: id, title: t, poster_path: pp || null, rating: cs.n, body: document.getElementById("ct").value.trim() }, { onConflict: "user_id,tmdb_id" });
     if (r.error) return toast("Publication impossible : " + r.error.message);
-    cEl.classList.remove("open"); toast("Critique publiée 🎬"); window.openFilm(id);
+    cEl.classList.remove("open"); toast("Critique publiée 🎬"); window.openFilm(id); if (window.CLAP_API && CLAP_API.onPublish) CLAP_API.onPublish();
   }, true);
   window.CLAP_API = { sb: sb, me: function () { return me; }, prof: function () { return prof; }, showAuth: showAuth, col: col };
 })();
