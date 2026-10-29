@@ -15,7 +15,7 @@
     '@keyframes obIn{from{opacity:0;transform:translateX(calc(var(--d,1)*44px)) scale(.98)}}#ob-card.leave>*{animation:obOut .24s ease-in forwards!important;animation-delay:0s!important}@keyframes obOut{to{opacity:0;transform:translateX(calc(var(--d,1)*-44px))}}' +
     '#ob-card p{margin:4px 0;opacity:.85}.ob-range{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:9px;outline:none;background:linear-gradient(90deg,#ff4d5e var(--p,0%),rgba(255,255,255,.18) var(--p,0%))}' +
     '.ob-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid #ff4d5e;box-shadow:0 4px 14px rgba(255,77,94,.55);cursor:grab}.ob-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #ff4d5e;box-shadow:0 4px 14px rgba(255,77,94,.55);cursor:grab}.ob-range:disabled{opacity:.35}' +
-    '.ob-agev{margin:16px 0 14px;text-align:center;font:400 104px/1 "Bebas Neue",Impact,sans-serif;letter-spacing:.04em;padding:12px 0;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);text-shadow:0 5px 0 rgba(255,77,94,.55),0 0 34px rgba(255,77,94,.4)}.ob-agev.pop{animation:agepop .18s}@keyframes agepop{50%{transform:scale(1.05)}}' +
+    '.ob-agev{margin:16px 0 14px;text-align:center;font:400 104px/1 "Bebas Neue",Impact,sans-serif;letter-spacing:.04em;padding:12px 0;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);text-shadow:0 5px 0 rgba(255,77,94,.55),0 0 34px rgba(255,77,94,.4)}' +
     '.ob-row{display:flex;align-items:center;gap:12px}.ob-arr,.ob-zb{flex:none;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.1);font-size:26px;line-height:1;display:grid;place-items:center;transition:transform .12s,background .2s;user-select:none;touch-action:manipulation}.ob-arr:active,.ob-zb:active{transform:scale(.88);background:rgba(255,77,94,.4)}.ob-zb{width:38px;height:38px;font-size:22px}' +
     '.ob-crop{position:relative;width:min(100%,340px);aspect-ratio:1;margin:14px auto 10px;border-radius:22px;overflow:hidden;touch-action:none;cursor:grab;background:#120a0e;box-shadow:0 18px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12)}.ob-crop canvas{width:100%;height:100%;display:block}' +
     '.ob-zl{display:flex;justify-content:space-between;align-items:center;margin:6px 4px 0;font-size:14px}.ob-zl b{color:#ffb703;font-variant-numeric:tabular-nums}' +
@@ -68,7 +68,7 @@
   // ---- Âge (écran neutre : on ne donne pas l'âge minimum à l'avance)
   B.age = function () {
     var s = $("#ob-as"), v = $("#ob-av");
-    function upd(x) { x = Math.max(5, Math.min(100, x)); s.value = x; v.textContent = x >= 100 ? "99+" : x; v.classList.remove("pop"); void v.offsetWidth; v.classList.add("pop"); fill(s); }
+    function upd(x) { x = Math.max(5, Math.min(100, x)); s.value = x; v.textContent = x >= 100 ? "99+" : x; if (!calm && v.animate) v.animate([{ transform: "scale(1)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], { duration: 180 }); fill(s); }
     s.addEventListener("input", function () { upd(+s.value); });
     o.querySelectorAll("[data-age]").forEach(function (b) {
       var d = +b.dataset.age, to, iv, stop = function () { clearTimeout(to); clearInterval(iv); };
