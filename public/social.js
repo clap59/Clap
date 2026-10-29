@@ -22,6 +22,7 @@
       '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? more(esc(r.body), "") : "") + '</div></div>';
   }
   var cols = "id,tmdb_id,title,poster_path,rating,body,created_at";
+  function bioHTML(u) { return (u.bio ? '<p style="margin:8px 0">' + esc(u.bio) + '</p>' : "") + (u.fav_title ? '<span class="chip">★ Film préféré : ' + esc(u.fav_title) + '</span>' : ""); }
 
   // ---- Onglet Activité (remplace « Séances », qui reviendra plus tard)
   var old = document.getElementById("seance"), tab = old.cloneNode(true);
@@ -54,7 +55,8 @@
   async function openProfile2(name) {
     pub._uid = null; pub.scrollTop = 0; pub.classList.add("open");
     pub.innerHTML = '<button class="back" aria-label="Retour">←</button><div class="pad" style="padding-top:70px"><p style="color:var(--muted)">Chargement…</p></div>';
-    var p = await sb.from("profiles").select("id,username,created_at").eq("username", name).maybeSingle();
+    var p = await sb.from("profiles").select("id,username,created_at,avatar_url,bio,fav_title").eq("username", name).maybeSingle();
+    if (p.error) p = await sb.from("profiles").select("id,username,created_at").eq("username", name).maybeSingle(); // avant la mise à jour de la base
     if (!p.data) { pub.innerHTML = '<button class="back" aria-label="Retour">←</button><div class="pad" style="padding-top:70px"><p>Ce profil est introuvable.<br><small>' + esc(p.error ? p.error.message : "") + '</small></p></div>'; return; }
     var u = p.data, me = A.me(); pub._uid = u.id;
     var res = await Promise.all([
@@ -66,9 +68,9 @@
     var rv = res[0].data || [], isMe = me && me.id === u.id, fol = !!res[3].data;
     var avg = rv.length ? rv.reduce(function (s, x) { return s + Number(x.rating); }, 0) / rv.length : 0;
     pub.innerHTML = '<button class="back" aria-label="Retour">←</button><div class="pad me" style="padding-top:70px">' +
-      '<div class="av" style="--c:' + A.col(u.username) + ';color:#fff">' + ini(u.username) + '</div><h2 style="margin:0">' + esc(u.username) + '</h2>' +
+      '<div class="av" style="--c:' + A.col(u.username) + ';color:#fff' + (u.avatar_url ? ';background:url(' + u.avatar_url + ') center/cover' : "") + '">' + (u.avatar_url ? "" : ini(u.username)) + '</div><h2 style="margin:0">' + esc(u.username) + '</h2>' +
       '<p style="color:var(--muted)">Membre depuis ' + new Date(u.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) + '</p>' +
-      '<div class="nums" style="gap:20px"><div><b>' + rv.length + '</b>critiques</div><div><b>' + (avg ? avg.toFixed(1).replace(".", ",") : "–") + '</b>note moyenne</div><div><b id="nfol">' + (res[1].count || 0) + '</b>abonnés</div><div><b>' + (res[2].count || 0) + '</b>abonnements</div></div>' +
+      bioHTML(u) + '<div class="nums" style="gap:20px"><div><b>' + rv.length + '</b>critiques</div><div><b>' + (avg ? avg.toFixed(1).replace(".", ",") : "–") + '</b>note moyenne</div><div><b id="nfol">' + (res[1].count || 0) + '</b>abonnés</div><div><b>' + (res[2].count || 0) + '</b>abonnements</div></div>' +
       (isMe ? '<p style="color:var(--muted)">C’est ton profil</p>' : '<button class="fw' + (fol ? " on" : "") + '" data-fid="' + u.id + '">' + (fol ? "Suivi" : "Suivre") + '</button>') +
       '<div id="ulists" style="text-align:left"></div><div style="text-align:left"><h2>Critiques</h2>' + (rv.length ? rv.map(function (x) { return item(x, null); }).join("") : '<p style="color:var(--muted)">Aucune critique pour l’instant.</p>') + '</div></div>';
     if (window.CLAP_LISTS) CLAP_LISTS.paintUser(u.id);

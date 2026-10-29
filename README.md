@@ -20,7 +20,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 2. Pendant le développement, va dans *Authentication > Providers > Email* et désactive **Confirm email** (sinon chaque inscription demande de cliquer sur un mail).
 3. **Abonnements** : colle aussi `supabase-2-abonnements.sql` dans le SQL Editor et clique *Run*.
 4. **Listes** : colle aussi `supabase-3-listes.sql` et clique *Run*.
-5. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+5. **Profil et modération** : colle `supabase-4-profil.sql` dans le SQL Editor et clique *Run* **avant** d'envoyer la nouvelle version en ligne.
+6. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -41,3 +42,9 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 **Adresses autorisées** : Supabase > *Authentication > URL Configuration* : Site URL = ton adresse Render ; dans Redirect URLs ajoute `https://TON-SITE.onrender.com/**` et `http://localhost:3000/**`.
 **Mot de passe** : Supabase > *Authentication > Sign In / Providers > Email* : longueur minimale 12 et exigences (minuscules, majuscules, chiffres, symboles) pour que les règles soient aussi appliquées côté serveur.
 **Emails** : l'envoi par défaut de Supabase est très limité. Avant d'inviter des amis, configure un SMTP (ex. Resend ou Brevo, offres gratuites) dans *Authentication > Emails > SMTP Settings*.
+
+## Écran de bienvenue et modération
+- À la première connexion, chaque nouveau compte passe par 3 étapes (photo de profil recadrée dans un cercle, film préféré, description), toutes passables. Les comptes déjà créés ne le voient pas ; « Modifier mon profil » (onglet Profil) le rouvre.
+- **Photos** : un modèle gratuit (NSFWJS, dossier `public/vendor/nsfw`) analyse la photo dans le navigateur avant l'envoi et refuse la nudité. C'est un premier filtre, pas une garantie : une personne technique peut le contourner.
+- **Textes** : le pseudo et la description sont filtrés par une liste de mots (`public/moderation.js` côté navigateur, `supabase-4-profil.sql` côté base de données, à garder identiques). Ça bloque les insultes et contenus sexuels évidents et les liens, mais pas toutes les formulations.
+- Pour aller plus loin plus tard : un bouton « Signaler », puis une vérification côté serveur par une API de modération.

@@ -55,13 +55,17 @@
 
   async function setUser(s) {
     me = s ? s.user : null; prof = null;
-    if (me) { var r = await sb.from("profiles").select("username").eq("id", me.id).single(); prof = r.data; }
+    if (me) {
+      var r = await sb.from("profiles").select("username,avatar_url,bio,fav_tmdb_id,fav_title,fav_poster,onboarded").eq("id", me.id).single();
+      if (r.error) r = await sb.from("profiles").select("username").eq("id", me.id).single(); // avant la mise à jour de la base
+      prof = r.data;
+    }
     btn.textContent = prof ? ini(prof.username) : "👤";
     if (window.CLAP_API && CLAP_API.onUser) CLAP_API.onUser();
     var h = $("#prof h2"), av = $("#prof .av"), nb = document.querySelectorAll("#prof .nums b");
     if (prof) {
-      h.textContent = prof.username; av.textContent = ini(prof.username); av.style.setProperty("--c", col(prof.username));
-      $("#prof .pad > p").textContent = "Membre de Clap";
+      h.textContent = prof.username; av.textContent = prof.avatar_url ? "" : ini(prof.username); av.style.setProperty("--c", col(prof.username)); av.style.background = prof.avatar_url ? "url(" + prof.avatar_url + ") center/cover" : "";
+      $("#prof .pad > p").textContent = prof.bio || "Membre de Clap";
       var c = await sb.from("reviews").select("id", { count: "exact", head: true }).eq("user_id", me.id);
       nb[2].textContent = c.count || 0;
     }

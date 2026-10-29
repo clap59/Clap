@@ -64,11 +64,12 @@
   };
   function show(name, m) { if (!T[name]) return; view = name; g.hidden = false; g.classList.remove("out"); V.innerHTML = T[name](m); if (name === "up" || name === "reset") check(); }
   var val = function (id) { var e = document.getElementById(id); return e ? e.value.trim() : ""; };
-  function msg(t, ok) { var m = $("#g-m"); if (m) { m.textContent = t; m.className = "g-msg " + (ok ? "ok" : "err"); if (!ok) { void m.offsetWidth; m.classList.add("shake"); } } }
+  function msg(t, ok) { var m = $("#g-m"); if (m) { m.textContent = t; m.className = "g-msg " + (ok ? "ok" : "err"); if (!ok && t) { void m.offsetWidth; m.classList.add("shake"); } } }
   function tr(m) {
     if (/Invalid login/i.test(m)) return "Email ou mot de passe incorrect.";
     if (/already registered/i.test(m)) return "Cet email a déjà un compte.";
-    if (/Database error/i.test(m)) return "Ce pseudo est déjà pris.";
+    if (/inappropriate/i.test(m)) return "Ce pseudo n’est pas autorisé.";
+    if (/Database error/i.test(m)) return "Ce pseudo est déjà pris ou n’est pas autorisé.";
     if (/not confirmed/i.test(m)) return "Confirme d’abord ton email avec le lien que tu as reçu.";
     if (/rate limit|too many/i.test(m)) return "Trop de tentatives, réessaie dans un moment.";
     if (/different from the old/i.test(m)) return "Choisis un mot de passe différent de l’ancien.";
@@ -88,9 +89,14 @@
     b.style.width = (n / R.length * 100) + "%"; b.style.background = n < 5 ? "#ff4d5e" : n < R.length ? "#ffb703" : "#5ee08a";
     return n === R.length;
   }
-  var okPseudo = function (u) { return /^[A-Za-z0-9_.-]{3,20}$/.test(u); };
+  var badWord = function (t) { return !!(window.CLAP_MOD && CLAP_MOD.bad(t)); };
+  var okPseudo = function (u) { return /^[A-Za-z0-9_.-]{3,20}$/.test(u) && !badWord(u); };
   var okMail = function (e) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e); };
-  function check() { var ok = rules(); if (view === "up") ok = ok && okMail(val("g-e")) && okPseudo(val("g-u")); $("#g-s").disabled = !ok; }
+  function check() {
+    var ok = rules();
+    if (view === "up") { ok = ok && okMail(val("g-e")) && okPseudo(val("g-u")); var m = $("#g-m"); if (m) { m.className = "g-msg err"; m.textContent = badWord(val("g-u")) ? "Ce pseudo n’est pas autorisé." : ""; } }
+    $("#g-s").disabled = !ok;
+  }
 
   // ---- Actions
   var busy = function (b) { V.querySelectorAll("[data-do]").forEach(function (x) { x.disabled = b; }); };
@@ -123,7 +129,7 @@
   async function doPseudo() {
     var u = val("g-u"); if (!okPseudo(u)) return msg("3 à 20 caractères : lettres, chiffres, _ . -");
     busy(true); var r = await sb.from("profiles").update({ username: u }).eq("id", A.me().id);
-    if (r.error) { busy(false); return msg(/duplicate|unique/i.test(r.error.message) ? "Ce pseudo est déjà pris." : r.error.message); }
+    if (r.error) { busy(false); return msg(/inappropriate/i.test(r.error.message) ? "Ce pseudo n’est pas autorisé." : /duplicate|unique/i.test(r.error.message) ? "Ce pseudo est déjà pris." : r.error.message); }
     location.reload();
   }
   var DO = { "in": doIn, up: doUp, forgot: doForgot, reset: doReset, pseudo: doPseudo };
