@@ -21,7 +21,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 3. **Abonnements** : colle aussi `supabase-2-abonnements.sql` dans le SQL Editor et clique *Run*.
 4. **Listes** : colle aussi `supabase-3-listes.sql` et clique *Run*.
 5. **Profil et modération** : colle `supabase-4-profil.sql` dans le SQL Editor et clique *Run* **avant** d'envoyer la nouvelle version en ligne.
-6. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+6. **Âge et 5 favoris** : colle `supabase-5-age-favoris.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
+7. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -48,3 +49,8 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - **Photos** : un modèle gratuit (NSFWJS, dossier `public/vendor/nsfw`) analyse la photo dans le navigateur avant l'envoi et refuse la nudité. C'est un premier filtre, pas une garantie : une personne technique peut le contourner.
 - **Textes** : le pseudo et la description sont filtrés par une liste de mots (`public/moderation.js` côté navigateur, `supabase-4-profil.sql` côté base de données, à garder identiques). Ça bloque les insultes et contenus sexuels évidents et les liens, mais pas toutes les formulations.
 - Pour aller plus loin plus tard : un bouton « Signaler », puis une vérification côté serveur par une API de modération.
+
+## Âge minimum et favoris
+- L'écran de bienvenue commence par l'âge (curseur de 5 à 99+). Moins de 13 ans : accès refusé, la personne est déconnectée et ne peut plus entrer avec ce compte. L'âge est enregistré dans une table privée (`user_private`) que seule la personne concernée peut lire. Les comptes existants sont invités à le renseigner une fois.
+- Un contrôle déclaratif n'est pas une vérification : il bloque les moins de 13 ans honnêtes, pas ceux qui mentent. En France, le consentement au traitement de données d'un mineur de moins de 15 ans demande en principe l'accord des parents : à faire valider avant un lancement public.
+- Chaque profil affiche jusqu'à 5 films favoris (« Mes 5 favoris »).

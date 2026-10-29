@@ -160,10 +160,11 @@
     var rv = res[2].data || [], avg = rv.length ? (rv.reduce(function (s, x) { return s + Number(x.rating); }, 0) / rv.length).toFixed(1).replace(".", ",") : "";
     nums.innerHTML = '<div><b>' + (res[0].count || 0) + '</b>abonnés</div><div><b>' + (res[1].count || 0) + '</b>abonnements</div><div><b>' + rv.length + '</b>critiques</div>';
     ticket.innerHTML = '<div><em>Ma carte cinéphile</em><strong>@' + esc(p.username) + '</strong><em>' + (avg ? "Note moyenne " + avg + " ★" : "Aucune critique pour l’instant") + '</em></div><div><em>Critiques</em><strong>' + rv.length + '</strong></div>';
-    fv2.innerHTML = rv.slice(0, 4).map(po).join("") || '<p style="grid-column:1/-1;color:var(--muted)">Tes films les mieux notés apparaîtront ici.</p>';
+    fv2.innerHTML = favItems(p, rv).map(po).join("") || '<p style="grid-column:1/-1;color:var(--muted)">Tes films les mieux notés apparaîtront ici.</p>';
   }
 
   // ================= Branchements
+  function favItems(p, rv) { var f = (p.fav_films || []).map(function (x) { return { tmdb_id: x.id, title: x.title, poster_path: x.poster }; }); return f.length ? f : rv.slice(0, 5); }
   var prev = A.onUser;
   A.onUser = function () { if (prev) prev(); loadFeed(); loadMyLists(); refreshProfile(); };
   A.onPublish = function () { loadFeed(); refreshProfile(); };

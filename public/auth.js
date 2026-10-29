@@ -56,8 +56,8 @@
   async function setUser(s) {
     me = s ? s.user : null; prof = null;
     if (me) {
-      var r = await sb.from("profiles").select("username,avatar_url,bio,fav_tmdb_id,fav_title,fav_poster,onboarded").eq("id", me.id).single();
-      if (r.error) r = await sb.from("profiles").select("username").eq("id", me.id).single(); // avant la mise à jour de la base
+      var FS = ["username,avatar_url,bio,fav_films,onboarded", "username,avatar_url,bio,onboarded", "username"], r; // essaie de la plus complète à la plus simple (anciennes bases)
+      for (var i = 0; i < FS.length; i++) { r = await sb.from("profiles").select(FS[i]).eq("id", me.id).single(); if (!r.error) break; }
       prof = r.data;
     }
     btn.textContent = prof ? ini(prof.username) : "👤";

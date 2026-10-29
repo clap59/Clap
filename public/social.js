@@ -22,7 +22,10 @@
       '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? more(esc(r.body), "") : "") + '</div></div>';
   }
   var cols = "id,tmdb_id,title,poster_path,rating,body,created_at";
-  function bioHTML(u) { return (u.bio ? '<p style="margin:8px 0">' + esc(u.bio) + '</p>' : "") + (u.fav_title ? '<span class="chip">★ Film préféré : ' + esc(u.fav_title) + '</span>' : ""); }
+  function bioHTML(u) {
+    var f = u.fav_films || [];
+    return (u.bio ? '<p style="margin:8px 0">' + esc(u.bio) + '</p>' : "") + (f.length ? '<h2 style="margin:14px 0 8px">Ses ' + f.length + ' favoris</h2><div class="grid" style="grid-template-columns:repeat(5,1fr)">' + f.map(function (x) { return '<button class="po" data-id="' + x.id + '" title="' + esc(x.title) + '" style="--g:' + (x.poster ? "url(https://image.tmdb.org/t/p/w185" + x.poster + ") center/cover" : "var(--line)") + '"><span></span></button>'; }).join("") + '</div>' : "");
+  }
 
   // ---- Onglet Activité (remplace « Séances », qui reviendra plus tard)
   var old = document.getElementById("seance"), tab = old.cloneNode(true);
@@ -55,7 +58,7 @@
   async function openProfile2(name) {
     pub._uid = null; pub.scrollTop = 0; pub.classList.add("open");
     pub.innerHTML = '<button class="back" aria-label="Retour">←</button><div class="pad" style="padding-top:70px"><p style="color:var(--muted)">Chargement…</p></div>';
-    var p = await sb.from("profiles").select("id,username,created_at,avatar_url,bio,fav_title").eq("username", name).maybeSingle();
+    var p = await sb.from("profiles").select("id,username,created_at,avatar_url,bio,fav_films").eq("username", name).maybeSingle();
     if (p.error) p = await sb.from("profiles").select("id,username,created_at").eq("username", name).maybeSingle(); // avant la mise à jour de la base
     if (!p.data) { pub.innerHTML = '<button class="back" aria-label="Retour">←</button><div class="pad" style="padding-top:70px"><p>Ce profil est introuvable.<br><small>' + esc(p.error ? p.error.message : "") + '</small></p></div>'; return; }
     var u = p.data, me = A.me(); pub._uid = u.id;
