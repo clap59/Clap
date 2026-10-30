@@ -54,3 +54,6 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - L'écran de bienvenue commence par l'âge (curseur de 5 à 99+). Moins de 13 ans : accès refusé, la personne est déconnectée et ne peut plus entrer avec ce compte. L'âge est enregistré dans une table privée (`user_private`) que seule la personne concernée peut lire. Les comptes existants sont invités à le renseigner une fois.
 - Un contrôle déclaratif n'est pas une vérification : il bloque les moins de 13 ans honnêtes, pas ceux qui mentent. En France, le consentement au traitement de données d'un mineur de moins de 15 ans demande en principe l'accord des parents : à faire valider avant un lancement public.
 - Chaque profil affiche jusqu'à 5 films favoris (« Mes 5 favoris »).
+
+## Page film
+`public/film.js` : héros animé (fond qui bouge, affiche qui s'incline), cercle de score qui se remplit, note animée, communauté Clap, note rapide, sections (Aperçu, Infos, Casting, Médias, Où voir, Critiques, Saga, Dans le même esprit) avec navigation collante. `server.js` demande à TMDB les images, vidéos, recommandations, classification et saga.

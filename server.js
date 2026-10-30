@@ -28,9 +28,11 @@ const route = (path, fn) => app.get(path, async (req, res) => {
 route("/api/trending", (req) => tmdb("/trending/movie/week", { page: req.query.page || 1 }));
 route("/api/search", (req) => tmdb("/search/movie", { query: req.query.q || "" }));
 route("/api/movie/:id", (req) => tmdb("/movie/" + encodeURIComponent(req.params.id), {
-  append_to_response: "credits,videos,similar,watch/providers",
-  include_video_language: "fr,en"
+  append_to_response: "credits,videos,images,recommendations,similar,release_dates,watch/providers",
+  include_video_language: "fr,en",
+  include_image_language: "fr,en,null"
 }));
+route("/api/collection/:id", (req) => tmdb("/collection/" + encodeURIComponent(req.params.id)));
 
 app.use(express.static("public"));
 const PORT = process.env.PORT || 3000;
