@@ -109,7 +109,7 @@
 
   // ---- Publier une critique (capture : remplace l'ancien comportement de démo)
   cEl.addEventListener("click", async function (e) {
-    if (!e.target.closest('[data-a="pub"]')) return;
+    if (window.CLAP_COMPOSE || !e.target.closest('[data-a="pub"]')) return;
     e.stopPropagation();
     if (!me) return showAuth("in", "Connecte-toi pour publier ta critique.");
     if (!cs.n) return toast("Choisis une note");

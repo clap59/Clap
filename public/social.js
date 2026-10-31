@@ -75,8 +75,9 @@
       '<p style="color:var(--muted)">Membre depuis ' + new Date(u.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) + '</p>' +
       bioHTML(u) + '<div class="nums" style="gap:20px"><div><b>' + rv.length + '</b>critiques</div><div><b>' + (avg ? avg.toFixed(1).replace(".", ",") : "–") + '</b>note moyenne</div><div><b id="nfol">' + (res[1].count || 0) + '</b>abonnés</div><div><b>' + (res[2].count || 0) + '</b>abonnements</div></div>' +
       (isMe ? '<p style="color:var(--muted)">C’est ton profil</p>' : '<button class="fw' + (fol ? " on" : "") + '" data-fid="' + u.id + '">' + (fol ? "Suivi" : "Suivre") + '</button>') +
-      '<div id="ulists" style="text-align:left"></div><div style="text-align:left"><h2>Critiques</h2>' + (rv.length ? rv.map(function (x) { return item(x, null); }).join("") : '<p style="color:var(--muted)">Aucune critique pour l’instant.</p>') + '</div></div>';
+      '<div id="ucal"></div><div id="ulists" style="text-align:left"></div><div style="text-align:left"><h2>Critiques</h2>' + (rv.length ? rv.map(function (x) { return item(x, null); }).join("") : '<p style="color:var(--muted)">Aucune critique pour l’instant.</p>') + '</div></div>';
     if (window.CLAP_LISTS) CLAP_LISTS.paintUser(u.id);
+    if (window.CLAP_CAL) CLAP_CAL.paintUser(u.id);
   }
 
   // ---- Clics (délégués)

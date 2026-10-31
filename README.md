@@ -23,7 +23,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 5. **Profil et modération** : colle `supabase-4-profil.sql` dans le SQL Editor et clique *Run* **avant** d'envoyer la nouvelle version en ligne.
 6. **Âge et 5 favoris** : colle `supabase-5-age-favoris.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
 7. **Notes rapides** : colle `supabase-6-notes.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
-8. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+8. **Calendrier** : colle `supabase-7-calendrier.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
+9. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -63,3 +64,9 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - Toucher une étoile sur une page film enregistre la note tout de suite (sans critique). La note reste affichée ; « Revoir et renoter » permet d'en donner une nouvelle (le compteur « vu 2 fois » vient de `supabase-6-notes.sql`).
 - Le fil n'affiche que les critiques avec du texte ; les notes seules apparaissent dans la page film, l'activité et le profil.
 - Les emojis d'interface sont remplacés par les pictogrammes de `public/icons.js` (fonction `IC("nom")`).
+
+## Calendrier et visionnages
+- Table `watches` : un visionnage = un film + une date + une note. Un film peut être vu plusieurs fois.
+- `public/compose.js` : fenêtre « Nouvelle critique » (recherche de film TMDB avec croix pour changer, date de visionnage par défaut aujourd'hui, interrupteur « J'ai revu ce film »).
+- `public/calendar.js` : calendrier mensuel sur le profil (et sur les profils publics) ; toucher un jour affiche les films vus et permet d'en ajouter un.
+- Une seule critique écrite par film et par personne (la dernière) ; chaque visionnage garde sa date et sa note.

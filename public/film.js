@@ -109,7 +109,7 @@
   function render(m) {
     var posterCss = m.poster_path ? "url(" + IMG + "w342" + m.poster_path + ") center/cover" : "linear-gradient(160deg,#6c757d,#212529)";
     if (!all.some(function (a) { return a[0] === m.title; })) all.push([m.title, posterCss, m.id, m.poster_path]);
-    fEl._t = m.title; fEl._id = m.id; fEl._p = m.poster_path;
+    fEl._t = m.title; fEl._id = m.id; fEl._p = m.poster_path; fEl._y = (m.release_date || "").slice(0, 4);
     var cr = (m.credits || {}).crew || [], cast = ((m.credits || {}).cast || []).slice(0, 14), yr = (m.release_date || "").slice(0, 4);
     var names = function (re) { var o = []; cr.forEach(function (c) { if (re.test(c.job) && o.indexOf(c.name) < 0) o.push(c.name); }); return o.slice(0, 3).map(E).join(", "); };
     var vids = (((m.videos || {}).results) || []).filter(function (v) { return v.site === "YouTube"; });
@@ -225,28 +225,32 @@
     var locked = !!mine && !rewatch, n = locked ? Number(mine.rating) : 0;
     var st = [1, 2, 3, 4, 5].map(function (k) { return '<button data-q="' + k + '" aria-label="' + k + ' étoiles"' + (locked ? " disabled" : "") + ' class="' + (n >= k ? "fp-f" : n >= k - .5 ? "fp-hf" : "") + '">★</button>'; }).join("");
     box.innerHTML = '<span>' + (rewatch ? "Nouvelle note après revisionnage" : "Ta note") + '</span><div class="fp-q' + (locked ? " fp-lock" : "") + '" id="fp-q">' + st + '</div>' +
-      (locked ? '<div class="fp-qm"><b>' + nf(n) + ' / 5</b>' + (mine.rewatches > 0 ? " · vu " + (mine.rewatches + 1) + " fois" : "") + '</div><button class="fp-lk" data-rw="1">' + IC("rotate") + 'Revoir et renoter</button>'
+      (locked ? '<div class="fp-qm"><b>' + nf(n) + ' / 5</b>' + (mine.views > 1 ? " · vu " + mine.views + " fois" : "") + '</div><button class="fp-lk" data-rw="1">' + IC("rotate") + 'Revoir et renoter</button> <button class="fp-lk" data-rwcrit="1">' + IC("edit") + 'Revoir et critiquer</button>'
         : rewatch ? '<div class="fp-qm">Ancienne note : ' + nf(Number(mine.rating)) + ' / 5</div><button class="fp-lk" data-rwc="1">Annuler</button>' : '<small class="fp-hint">Touche une étoile, la note est enregistrée tout de suite.</small>');
   }
   function paintMyReview() {
     var el = document.getElementById("fp-mine"); if (!el) return;
     if (!mine) { el.innerHTML = '<div class="fp-mc"><b>Ton avis compte</b><p>Tu n’as pas encore critiqué ce film.</p><button class="btn main" data-a="write">' + IC("edit") + 'Écrire une critique</button></div>'; return; }
     if (!mine.body) { el.innerHTML = '<div class="fp-mc"><b>Tu as noté ce film ' + nf(Number(mine.rating)) + ' / 5</b><p>Tu peux ajouter une critique écrite.</p><button class="btn main" data-a="write">' + IC("edit") + 'Ajouter une critique</button></div>'; return; }
-    el.innerHTML = '<div class="fp-sub" style="margin-top:0">Ta critique</div><div class="fp-mc fp-mine"><div class="fp-st">' + fpstars(Number(mine.rating)) + ' <b>' + nf(Number(mine.rating)) + '</b>/5</div>' + more(E(mine.body), "fp-mt") + '<button class="btn" data-a="write">' + IC("edit") + 'Modifier ma critique</button></div>';
+    el.innerHTML = '<div class="fp-sub" style="margin-top:0">Ta critique</div><div class="fp-mc fp-mine"><div class="fp-st">' + fpstars(Number(mine.rating)) + ' <b>' + nf(Number(mine.rating)) + '</b>/5</div>' + more(E(mine.body), "fp-mt") + '<button class="btn" data-a="write">' + IC("edit") + 'Modifier ma critique</button> <button class="btn" data-rwcrit="1">' + IC("rotate") + 'Revoir et critiquer</button></div>';
   }
   async function loadMine(id) {
     var me = A.me(); mine = null; rewatch = false; if (!me) { paintMine(); paintMyReview(); return; }
     var r = await sb.from("reviews").select("rating,body,rewatches").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
     if (r.error) r = await sb.from("reviews").select("rating,body").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
-    if (fEl._id !== id) return; mine = r.data || null; paintMine(); paintMyReview();
+    var c = await sb.from("watches").select("id", { count: "exact", head: true }).eq("tmdb_id", id).eq("user_id", me.id);
+    if (fEl._id !== id) return; mine = r.data || null;
+    if (mine) mine.views = !c.error && c.count ? c.count : (mine.rewatches || 0) + 1;
+    paintMine(); paintMyReview();
   }
   async function saveRating(v) {
     var me = A.me(); if (!me) return A.showAuth("in", "Connecte-toi pour noter.");
-    var row = { tmdb_id: fEl._id, title: fEl._t, poster_path: fEl._p || null, rating: v }, id = fEl._id;
-    if (mine && rewatch) row.rewatches = (mine.rewatches || 0) + 1;
+    var id = fEl._id, row = { tmdb_id: id, title: fEl._t, poster_path: fEl._p || null, rating: v }, again = !!mine && rewatch;
+    if (again) row.rewatches = (mine.rewatches || 0) + 1;
     var r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" });
     if (r.error && "rewatches" in row) { delete row.rewatches; r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" }); }
     if (r.error) return toast("Oups, réessaie (" + r.error.message + ")");
+    if (!mine || again) await sb.from("watches").insert({ tmdb_id: id, title: fEl._t, poster_path: fEl._p || null, rating: v, watched_on: new Date().toLocaleDateString("sv-SE") });
     toast("Note enregistrée : " + nf(v) + " / 5"); await loadMine(id); reloadCommunity(id); paintRv(); loadFeatured(id); if (A.onPublish) A.onPublish();
   }
   async function loadFeatured(id) {
@@ -260,13 +264,8 @@
       return '<div class="fp-fc"><div class="who" style="margin:0 0 6px"><div class="av" style="--c:' + A.col(u) + ';color:#fff;width:28px;height:28px;font-size:11px">' + ini(u) + '</div><button class="un" data-u="' + E(u) + '">' + E(u) + '</button></div><div class="fp-st">' + fpstars(Number(x.rating)) + '</div><p class="fp-fx">' + E(x.body) + '</p><small>' + IC("heart") + x.likes.length + '</small></div>';
     }).join("") + '</div>';
   }
-  function openWrite() {
-    openCompose(fEl._t); if (!mine) return; cs.n = Number(mine.rating);
-    cEl.querySelectorAll(".pick button").forEach(function (b) { var n = +b.dataset.n; b.classList.toggle("on", n <= cs.n); b.classList.toggle("half", n - .5 === cs.n); });
-    var pv = document.getElementById("pv"); if (pv) pv.textContent = nf(cs.n) + " / 5";
-    var ct = document.getElementById("ct"), cc = document.getElementById("cc");
-    if (ct && mine.body) { ct.value = mine.body; if (cc) cc.textContent = ct.value.length + " caractère" + (ct.value.length > 1 ? "s" : ""); }
-  }
+  function filmObj() { return { id: fEl._id, title: fEl._t, poster_path: fEl._p, year: fEl._y }; }
+  function openWrite() { openCompose(filmObj()); }
 
   // ---- Interactions
   fEl.addEventListener("click", function (e) {
@@ -274,6 +273,7 @@
     if (q && !q.disabled) { var r = q.getBoundingClientRect(), v = +q.dataset.q - (e.clientX - r.left < r.width / 2 ? .5 : 0); setStarsUI(v); return void saveRating(v); }
     if (t.closest("[data-rw]")) { rewatch = true; paintMine(); return toast("Mode revisionnage : donne ta nouvelle note"); }
     if (t.closest("[data-rwc]")) { rewatch = false; paintMine(); return; }
+    if (t.closest("[data-rwcrit]")) return openCompose(filmObj(), { rewatch: true });
     if (t.closest('[data-a="write"]')) return openWrite();
     var v2 = t.closest("[data-v]"); if (v2) return modal('<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v2.dataset.v) + '?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>');
     var g = t.closest("[data-g]"); if (g) return modal('<img src="' + IMG + 'w1280' + g.dataset.g + '" alt="">');
