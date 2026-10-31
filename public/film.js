@@ -25,7 +25,7 @@
 .fp-sec{padding:26px 16px;border-top:1px solid var(--line)}.fp-sec[hidden]{display:none}
 .fp-rv{opacity:0;transform:translateY(26px);transition:opacity .65s,transform .65s cubic-bezier(.2,.8,.2,1)}.fp-rv.fp-in{opacity:1;transform:none}
 .fp-h{display:flex;align-items:center;gap:10px;font:400 30px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;margin:0 0 16px}
-.fp-h i{font-style:normal;flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:linear-gradient(135deg,var(--accent),#ff9f43);box-shadow:0 6px 16px rgba(255,77,94,.3)}
+.fp-h i{color:#fff;font-style:normal;flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:linear-gradient(135deg,var(--accent),#ff9f43);box-shadow:0 6px 16px rgba(255,77,94,.3)}
 .fp-h em{margin-left:auto;font:500 13px "DM Sans",sans-serif;color:var(--muted);font-style:normal;letter-spacing:0}
 .fp-sub{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin:18px 0 8px}
 .fp-scores{display:flex;justify-content:space-around;gap:10px}.fp-ringw{text-align:center;width:48%}
@@ -39,12 +39,12 @@
 .fp-qr{margin:22px 0 4px;padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--line);text-align:center}.fp-qr span{display:block;font-weight:700;margin-bottom:6px}
 .fp-q{display:flex;justify-content:center;gap:4px}.fp-q button{font-size:44px;line-height:1;color:rgba(128,128,128,.4);transition:transform .15s,color .15s}.fp-q button.fp-f{color:var(--gold);transform:scale(1.12)}.fp-q button.fp-hf{background:linear-gradient(90deg,var(--gold) 50%,rgba(128,128,128,.4) 50%);-webkit-background-clip:text;background-clip:text;color:transparent;transform:scale(1.12)}.fp-q button:active{transform:scale(.85)}
 .fp-acts{display:flex;gap:8px;margin-top:14px}.fp-acts .btn{padding:12px 6px}
-.fp-facts{display:flex;gap:8px;overflow-x:auto;margin:16px -16px 0;padding:2px 16px 6px;scrollbar-width:none}.fp-fact{flex:none;padding:9px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:500}
+.fp-facts{display:flex;gap:8px;overflow-x:auto;margin:16px -16px 0;padding:2px 16px 6px;scrollbar-width:none}.fp-fact{flex:none;display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:500}
 .fp-tl{font-style:italic;color:var(--muted);margin-top:18px}.fp-syn{margin:8px 0 0;line-height:1.6;font-size:15.5px}
 .fp-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fp-tile{padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line);min-width:0}.fp-tile.fp-wide{grid-column:1/-1}
 .fp-tile small{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;margin-bottom:3px}.fp-tile b{font-weight:700;overflow-wrap:anywhere}.fp-tile em{display:block;font-style:normal;color:var(--muted);font-size:12px;margin-top:2px}
 .fp-mon{margin-top:10px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}.fp-mr{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;font-size:13px;margin:6px 0}.fp-track{height:10px;border-radius:9px;background:rgba(128,128,128,.2);overflow:hidden}.fp-fill{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--accent),#ff9f43);transition:width 1.3s cubic-bezier(.2,.8,.2,1)}.fp-fill.fp-g{background:linear-gradient(90deg,#22c55e,#86efac)}
-.fp-badge{display:inline-block;margin-top:8px;padding:5px 12px;border-radius:99px;background:linear-gradient(135deg,var(--accent),#ff9f43);color:#fff;font-weight:700;font-size:13px}
+.fp-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:99px;background:linear-gradient(135deg,var(--accent),#ff9f43);color:#fff;font-weight:700;font-size:13px}
 .fp-cast,.fp-hs,.fp-sim{display:flex;gap:12px;overflow-x:auto;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
 .fp-cc{flex:none;width:84px;text-align:center;font-size:12px;line-height:1.25;animation:fpup .5s calc(var(--i)*.05s) backwards}.fp-cc div{width:72px;height:72px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;color:#fff;font:400 26px "Bebas Neue",sans-serif;background-size:cover;background-position:center;box-shadow:0 6px 16px rgba(0,0,0,.25);transition:transform .2s}.fp-cc:active div{transform:scale(.92)}.fp-cc small{color:var(--muted);display:block}
 .fp-vd{flex:none;width:200px;text-align:left}.fp-vt{position:relative;aspect-ratio:16/9;border-radius:12px;background-size:cover;background-position:center;display:grid;place-items:center;color:#fff;font-size:26px;width:100%;box-shadow:0 8px 20px rgba(0,0,0,.3);transition:transform .2s}.fp-vt::before{content:"";position:absolute;inset:0;border-radius:12px;background:rgba(0,0,0,.3)}.fp-vt span{position:relative;width:44px;height:44px;border-radius:50%;background:rgba(255,77,94,.92);display:grid;place-items:center;font-size:18px;padding-left:3px}.fp-vd:active .fp-vt{transform:scale(.96)}.fp-vd small{display:block;margin-top:6px;color:var(--muted);font-size:12px}
@@ -57,6 +57,12 @@
 .fp-load{display:grid;place-items:center;height:70%}.fp-load img{width:76px;animation:fpbeat 1s ease-in-out infinite}@keyframes fpbeat{50%{transform:scale(1.15) rotate(-6deg)}}
 #fp-modal{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.92);display:grid;place-items:center;animation:fpfade .25s}#fp-modal[hidden]{display:none}.fp-mb{width:100%}.fp-mb iframe{width:100%;aspect-ratio:16/9;border:0;display:block}.fp-mb img{width:100%;max-height:80vh;object-fit:contain;display:block}
 .fp-mx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:18px;z-index:2}@keyframes fpfade{from{opacity:0}}
+.fp-tile small .ic{width:14px;height:14px}.fp-fact .ic{width:15px;height:15px;color:var(--accent)}
+.fp-qm{margin-top:4px;font-size:15px;color:var(--muted)}.fp-qm b{color:var(--gold);font-size:18px}.fp-hint{display:block;color:var(--muted);margin-top:6px;font-size:12px}
+.fp-lk{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:8px 14px;border-radius:99px;border:1px solid var(--line);font-weight:700;font-size:13px;color:var(--text);background:var(--bg);transition:transform .15s}.fp-lk:active{transform:scale(.95)}.fp-lk .ic{width:15px;height:15px}
+.fp-q button:disabled{cursor:default}.fp-q.fp-lock button{transform:none}
+.fp-mc{margin:0 0 16px;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}.fp-mc p{margin:6px 0 12px;color:var(--muted)}.fp-mc.fp-mine{border-color:var(--accent);box-shadow:0 8px 28px color-mix(in srgb,var(--accent) 18%,transparent)}.fp-mt{margin:8px 0 12px;line-height:1.55;white-space:pre-line}
+.fp-fc{flex:none;width:250px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}.fp-fc small{color:var(--muted);display:inline-flex;gap:5px;align-items:center}.fp-fx{margin:6px 0 8px;font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.fp-wrap *{animation:none!important;transition:none!important}.fp-rv{opacity:1;transform:none}.fp-rv:not(.fp-in) .fp-s{opacity:1}}`;
   document.head.appendChild(st);
 
@@ -83,7 +89,7 @@
   var region = function (c) { try { return new Intl.DisplayNames(["fr"], { type: "region" }).of(c); } catch (e) { return c; } };
   var STATUS = { "Released": "Sorti", "Post Production": "En post-production", "In Production": "En tournage", "Planned": "Prévu", "Rumored": "Rumeur", "Canceled": "Annulé" };
   var VT = { "Trailer": "Bande-annonce", "Teaser": "Teaser", "Clip": "Extrait", "Featurette": "Making-of", "Behind the Scenes": "Coulisses", "Bloopers": "Bêtisier" };
-  function verdict(p) { return p >= 90 ? "Chef-d’œuvre 🏆" : p >= 80 ? "Excellent 🔥" : p >= 65 ? "Bon film 👍" : p >= 50 ? "Mitigé 😐" : "Décevant 🥶"; }
+  function verdict(p) { return p >= 90 ? "Chef-d’œuvre" : p >= 80 ? "Excellent" : p >= 65 ? "Bon film" : p >= 50 ? "Mitigé" : "Décevant"; }
   function fpstars(n) { var h = ""; for (var i = 1; i <= 5; i++) h += '<i class="fp-s ' + (n >= i ? "" : n >= i - .5 ? "fp-h2" : "fp-e") + '" style="--i:' + i + ';font-style:normal">★</i>'; return h; }
   function countUp(el, to, suf, dec) { var t0 = null; (function f(t) { if (!t0) t0 = t; var k = Math.min(1, (t - t0) / 1500), v = to * (1 - Math.pow(1 - k, 3)); el.textContent = (dec ? v.toFixed(1).replace(".", ",") : Math.round(v)) + suf; if (k < 1) requestAnimationFrame(f); })(performance.now()); }
   function startRing(r) { var t = +r.dataset.t; r.style.setProperty("--fpp", t); countUp(r.querySelector("b"), t, "%"); setTimeout(function () { r.classList.add("fp-done"); }, 1700); }
@@ -115,12 +121,11 @@
     var p = m.vote_count ? Math.round(m.vote_average * 10) : -1, a5 = m.vote_average / 2, certif = cert(m);
     var bg = m.backdrop_path ? IMG + "w1280" + m.backdrop_path : (m.poster_path ? IMG + "w780" + m.poster_path : "");
     var facts = [];
-    if (m.release_date) facts.push("📅 Sorti " + rel(m.release_date));
-    if (m.budget > 0 && m.revenue > 0) facts.push("💰 " + (m.revenue / m.budget >= 1 ? "×" + (m.revenue / m.budget).toFixed(1).replace(".", ",") + " son budget" : "N’a pas couvert son budget"));
-    if (m.runtime) facts.push("⏱ " + runtime(m.runtime) + " = " + (m.runtime / 45).toFixed(1).replace(".", ",") + " épisodes de 45 min");
-    if (m.vote_count) facts.push("🗳 " + m.vote_count.toLocaleString("fr-FR") + " avis dans le monde");
-    if ((m.spoken_languages || []).length > 1) facts.push("🌍 " + m.spoken_languages.length + " langues parlées");
-    if (cast.length) facts.push("🎭 " + ((m.credits || {}).cast || []).length + " acteurs au casting");
+    if (m.release_date) facts.push(["calendar", "Sorti " + rel(m.release_date)]);
+    if (m.budget > 0 && m.revenue > 0) facts.push(m.revenue / m.budget >= 1 ? ["trending", "×" + (m.revenue / m.budget).toFixed(1).replace(".", ",") + " son budget"] : ["down", "N’a pas couvert son budget"]);
+    if (m.vote_count) facts.push(["bar", m.vote_count.toLocaleString("fr-FR") + " notes dans le monde"]);
+    if ((m.spoken_languages || []).length > 1) facts.push(["globe", m.spoken_languages.length + " langues parlées"]);
+    if (cast.length) facts.push(["users", ((m.credits || {}).cast || []).length + " acteurs au casting"]);
     var provG = [["flatrate", "Streaming"], ["free", "Gratuit"], ["ads", "Gratuit avec pubs"], ["rent", "Location"], ["buy", "Achat"]].map(function (g) {
       var l = wp[g[0]]; return l && l.length ? '<div class="fp-sub">' + g[1] + '</div><div class="fp-pv">' + l.slice(0, 8).map(function (v) { return '<div><img src="' + IMG + 'w92' + v.logo_path + '" alt="' + E(v.provider_name) + '">' + E(v.provider_name) + '</div>'; }).join("") + '</div>' : "";
     }).join("");
@@ -128,29 +133,29 @@
 
     var ov = '<div class="fp-scores"><div class="fp-ringw">' + (p >= 0 ? '<div class="fp-ring" data-t="' + p + '"><b>0%</b></div><div class="fp-rl">' + verdict(p) + '</div><div class="fp-st">' + fpstars(Math.round(a5 * 2) / 2) + ' <b>' + a5.toFixed(1).replace(".", ",") + '</b>/5</div><small>' + m.vote_count.toLocaleString("fr-FR") + ' notes · TMDB</small>' : '<div class="fp-ring fp-nd"><b>–</b></div><div class="fp-rl">Pas encore noté</div>') + '</div>' +
       '<div class="fp-ringw" id="fp-clap"><div class="fp-ring fp-nd"><b>?</b></div><div class="fp-rl">Communauté Clap</div><small>Chargement…</small></div></div>' +
-      '<div class="fp-qr"><span>Ta note</span><div class="fp-q" id="fp-q">' + [1, 2, 3, 4, 5].map(function (n) { return '<button data-q="' + n + '" aria-label="' + n + ' étoiles">★</button>'; }).join("") + '</div></div>' +
-      '<div class="fp-acts"><button class="btn" data-a="seen">👁 Vu</button><button class="btn" data-l="1">＋ Liste</button><button class="btn main" data-a="write">✎ Critiquer</button></div>' +
-      (trailer ? '<div class="fp-acts"><button class="btn" data-v="' + E(trailer.key) + '" style="width:100%">▶ Voir la bande-annonce</button></div>' : "") +
-      '<div class="fp-facts">' + facts.map(function (f) { return '<div class="fp-fact">' + E(f) + '</div>'; }).join("") + '</div>' +
+      '<div class="fp-qr" id="fp-qr"></div>' +
+      '<div class="fp-acts"><button class="btn" data-l="1">' + IC("plus") + 'Liste</button><button class="btn main" data-a="write">' + IC("edit") + 'Critiquer</button></div>' +
+      (trailer ? '<div class="fp-acts"><button class="btn" data-v="' + E(trailer.key) + '" style="width:100%">' + IC("play") + 'Voir la bande-annonce</button></div>' : "") +
+      '<div class="fp-facts">' + facts.map(function (f) { return '<div class="fp-fact">' + IC(f[0]) + E(f[1]) + '</div>'; }).join("") + '</div>' +
       (m.tagline ? '<p class="fp-tl">« ' + E(m.tagline) + ' »</p>' : "") + more(E(m.overview || "Pas de synopsis en français pour le moment."), "fp-syn");
 
     var infos = '<div class="fp-sub" style="margin-top:0">Le film</div><div class="fp-tiles">' +
-      tile("📅", "Sortie en France", fmtDate(m.release_date), rel(m.release_date), true) + tile("⏱", "Durée", runtime(m.runtime)) + tile("🔞", "Classification", E(certif)) +
-      tile("🎞", "Statut", STATUS[m.status] || E(m.status)) + tile("🗣", "Langue originale", E(lang(m.original_language))) +
-      tile("🔤", "Titre original", m.original_title !== m.title ? E(m.original_title) : "") + tile("🌍", "Pays", E((m.production_countries || []).map(function (c) { return region(c.iso_3166_1); }).join(", ")), "", true) + '</div>' +
-      '<div class="fp-sub">L’équipe</div><div class="fp-tiles">' + tile("🎬", "Réalisation", names(/^Director$/)) + tile("✍️", "Scénario", names(/Screenplay|Writer|Story/)) + tile("🎵", "Musique", names(/Original Music Composer/)) +
-      tile("📷", "Photographie", names(/Director of Photography/)) + tile("🏢", "Production", E((m.production_companies || []).slice(0, 3).map(function (c) { return c.name; }).join(", ")), "", true) + '</div>' +
+      tile(IC("calendar"), "Sortie en France", fmtDate(m.release_date), rel(m.release_date), true) + tile(IC("clock"), "Durée", runtime(m.runtime)) + tile(IC("shield"), "Classification", E(certif)) +
+      tile(IC("flag"), "Statut", STATUS[m.status] || E(m.status)) + tile(IC("mic"), "Langue originale", E(lang(m.original_language))) +
+      tile(IC("type"), "Titre original", m.original_title !== m.title ? E(m.original_title) : "") + tile(IC("globe"), "Pays", E((m.production_countries || []).map(function (c) { return region(c.iso_3166_1); }).join(", ")), "", true) + '</div>' +
+      '<div class="fp-sub">L’équipe</div><div class="fp-tiles">' + tile(IC("video"), "Réalisation", names(/^Director$/)) + tile(IC("feather"), "Scénario", names(/Screenplay|Writer|Story/)) + tile(IC("music"), "Musique", names(/Original Music Composer/)) +
+      tile(IC("camera"), "Photographie", names(/Director of Photography/)) + tile(IC("briefcase"), "Production", E((m.production_companies || []).slice(0, 3).map(function (c) { return c.name; }).join(", ")), "", true) + '</div>' +
       (m.budget > 0 || m.revenue > 0 ? '<div class="fp-sub">Les chiffres</div><div class="fp-mon">' +
         (m.budget > 0 ? '<div class="fp-mr"><span>Budget</span><span class="fp-track"><i class="fp-fill" data-w="' + (m.budget / Math.max(m.budget, m.revenue) * 100) + '%"></i></span><b>' + money(m.budget) + '</b></div>' : "") +
         (m.revenue > 0 ? '<div class="fp-mr"><span>Recettes</span><span class="fp-track"><i class="fp-fill fp-g" data-w="' + (m.revenue / Math.max(m.budget, m.revenue) * 100) + '%"></i></span><b>' + money(m.revenue) + '</b></div>' : "") +
-        (m.budget > 0 && m.revenue > 0 ? '<span class="fp-badge">' + (m.revenue / m.budget >= 3 ? "🚀 Énorme succès" : m.revenue / m.budget >= 1 ? "✅ Rentable" : "📉 Déficitaire") + ' · ×' + (m.revenue / m.budget).toFixed(1).replace(".", ",") + '</span>' : "") + '</div>' : "");
+        (m.budget > 0 && m.revenue > 0 ? '<span class="fp-badge">' + (m.revenue / m.budget >= 3 ? IC("trending") + "Énorme succès" : m.revenue / m.budget >= 1 ? IC("check") + "Rentable" : IC("down") + "Déficitaire") + ' · ×' + (m.revenue / m.budget).toFixed(1).replace(".", ",") + '</span>' : "") + '</div>' : "");
 
     var castH = '<div class="fp-cast">' + cast.map(function (c, k) {
       return '<div class="fp-cc" style="--i:' + k + '"><div style="' + (c.profile_path ? "background-image:url(" + IMG + "w185" + c.profile_path + ")" : "background:hsl(" + (k * 67 + 10) + ",55%,40%)") + '">' + (c.profile_path ? "" : ii(c.name)) + '</div>' + E(c.name) + '<small>' + E(c.character) + '</small></div>';
     }).join("") + '</div>';
-    var medH = (vids.length ? '<div class="fp-sub" style="margin-top:0">Vidéos</div><div class="fp-hs">' + vids.slice(0, 8).map(function (v) { return '<div class="fp-vd" data-v="' + E(v.key) + '"><div class="fp-vt" style="background-image:url(https://i.ytimg.com/vi/' + E(v.key) + '/mqdefault.jpg)"><span>▶</span></div><small>' + (VT[v.type] || E(v.type)) + '</small></div>'; }).join("") + '</div>' : "") +
+    var medH = (vids.length ? '<div class="fp-sub" style="margin-top:0">Vidéos</div><div class="fp-hs">' + vids.slice(0, 8).map(function (v) { return '<div class="fp-vd" data-v="' + E(v.key) + '"><div class="fp-vt" style="background-image:url(https://i.ytimg.com/vi/' + E(v.key) + '/mqdefault.jpg)"><span>' + IC("play", { fill: 1 }) + '</span></div><small>' + (VT[v.type] || E(v.type)) + '</small></div>'; }).join("") + '</div>' : "") +
       (gal.length ? '<div class="fp-sub">Galerie</div><div class="fp-hs">' + gal.map(function (b) { return '<div class="fp-gi" data-g="' + b.file_path + '" style="background-image:url(' + IMG + 'w500' + b.file_path + ')"></div>'; }).join("") + '</div>' : "");
-    var rev = '<div class="fp-hist" id="fp-hist"></div><div class="fp-acts" style="margin:0 0 6px"><button class="btn main" data-a="write">✎ Écrire une critique</button></div><div id="rvs"></div>';
+    var rev = '<div class="fp-hist" id="fp-hist"></div><div id="fp-mine"></div><div id="fp-feat"></div><div class="fp-sub">Toutes les critiques</div><div id="rvs"></div>';
     var poster2 = function (r) { return '<div class="fp-pw"><button class="fp-po2" data-id="' + r.id + '" aria-label="' + E(r.title) + '" style="background-image:url(' + IMG + 'w342' + r.poster_path + ')">' + (r.vote_average ? '<i>★ ' + r.vote_average.toFixed(1).replace(".", ",") + '</i>' : "") + '</button>' + E(r.title) + '<small>' + (r.release_date || "").slice(0, 4) + '</small></div>'; };
 
     var nav = [["fp-ov", "Aperçu"], ["fp-inf", "Infos"], ["fp-cs", "Casting"]].concat(hasMedia ? [["fp-med", "Médias"]] : []).concat(provG ? [["fp-w", "Où voir"]] : []).concat([["fp-rev", "Critiques"]]).concat(recos.length ? [["fp-sim", "Plus"]] : []);
@@ -158,11 +163,11 @@
       '<div class="fp-hero"><div class="fp-hpar"><div class="fp-hbg" style="background-image:url(' + bg + ')"></div></div><div class="fp-hsh"></div><div class="fp-hc"><div class="fp-poster" style="background-image:url(' + (m.poster_path ? IMG + "w342" + m.poster_path : "") + ')"></div><div class="fp-ht"><h1>' + E(m.title).toUpperCase() + '</h1><div class="fp-chips">' +
       (yr ? '<span class="fp-chip fp-w">' + yr + '</span>' : "") + (m.runtime ? '<span class="fp-chip">' + runtime(m.runtime) + '</span>' : "") + (certif ? '<span class="fp-chip">' + E(certif) + '</span>' : "") + (m.genres || []).map(function (g) { return '<span class="fp-chip">' + E(g.name) + '</span>'; }).join("") + '</div></div></div></div>' +
       '<nav class="fp-nav">' + nav.map(function (n) { return '<button data-s="' + n[0] + '">' + n[1] + '</button>'; }).join("") + '</nav>' +
-      sec("fp-ov", "★", "Aperçu", ov) + sec("fp-inf", "ℹ️", "Infos", infos) + sec("fp-cs", "🎭", "Casting", castH, cast.length ? cast.length + " têtes d’affiche" : "") +
-      (hasMedia ? sec("fp-med", "🎞", "Médias", medH) : "") + (provG ? sec("fp-w", "📺", "Où le voir", provG + '<p class="fp-note">Disponibilité en France · données JustWatch via TMDB.</p>') : "") +
-      sec("fp-rev", "💬", "Critiques", rev, '<span id="fp-rstat"></span>') +
-      '<section class="fp-sec fp-rv" id="fp-saga" hidden><h2 class="fp-h"><i>🎬</i>Saga</h2><div class="fp-sim" id="fp-sagab"></div></section>' +
-      (recos.length ? sec("fp-sim", "✨", "Dans le même esprit", '<div class="fp-sim">' + recos.map(poster2).join("") + '</div>') : "") +
+      sec("fp-ov", IC("star"), "Aperçu", ov) + sec("fp-inf", IC("info"), "Infos", infos) + sec("fp-cs", IC("users"), "Casting", castH, cast.length ? cast.length + " têtes d’affiche" : "") +
+      (hasMedia ? sec("fp-med", IC("image"), "Médias", medH) : "") + (provG ? sec("fp-w", IC("tv"), "Où le voir", provG + '<p class="fp-note">Disponibilité en France · données JustWatch via TMDB.</p>') : "") +
+      sec("fp-rev", IC("msgsq"), "Critiques", rev, '<span id="fp-rstat"></span>') +
+      '<section class="fp-sec fp-rv" id="fp-saga" hidden><h2 class="fp-h"><i>' + IC("layers") + '</i>Saga</h2><div class="fp-sim" id="fp-sagab"></div></section>' +
+      (recos.length ? sec("fp-sim", IC("compass"), "Dans le même esprit", '<div class="fp-sim">' + recos.map(poster2).join("") + '</div>') : "") +
       '<div class="fp-foot">Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.</div></div>';
     fEl.scrollTop = 0; paintRv();
 
@@ -191,40 +196,85 @@
     fEl.addEventListener("scroll", fEl._sc, { passive: true }); fEl._sc();
 
     // communauté Clap + saga
-    sb.from("reviews").select("rating").eq("tmdb_id", m.id).then(function (r) { if (fEl._id === m.id) paintCommunity(r.data || []); });
+    reloadCommunity(m.id); loadMine(m.id); loadFeatured(m.id);
     if (m.belongs_to_collection) api("collection/" + m.belongs_to_collection.id).then(function (c) {
       if (fEl._id !== m.id) return; var parts = (c.parts || []).filter(function (x) { return x.poster_path; }).sort(function (x, y) { return (x.release_date || "9") < (y.release_date || "9") ? -1 : 1; });
-      if (parts.length < 2) return; var s = document.getElementById("fp-saga"); s.querySelector("h2").innerHTML = "<i>🎬</i>" + E(c.name || "Saga");
+      if (parts.length < 2) return; var s = document.getElementById("fp-saga"); s.querySelector("h2").innerHTML = "<i>" + IC("layers") + "</i>" + E(c.name || "Saga");
       document.getElementById("fp-sagab").innerHTML = parts.map(function (x) { return poster2(x).replace('class="fp-po2"', 'class="fp-po2' + (x.id === m.id ? " fp-cur" : "") + '"'); }).join(""); s.hidden = false; io.observe(s);
     }).catch(function () {});
   }
 
   function paintCommunity(rs) {
     var n = rs.length, box = document.getElementById("fp-clap"), rc = document.getElementById("fp-rstat"), hist = document.getElementById("fp-hist"); if (!box) return;
-    if (!n) { box.innerHTML = '<div class="fp-ring fp-nd"><b>?</b></div><div class="fp-rl">Communauté Clap</div><small>Sois la première personne à noter</small>'; if (rc) rc.textContent = "Aucune critique"; return; }
-    var avg = rs.reduce(function (s, x) { return s + Number(x.rating); }, 0) / n, pos = Math.round(rs.filter(function (x) { return Number(x.rating) >= 3.5; }).length / n * 100);
-    box.innerHTML = '<div class="fp-ring fp-gold" data-t="' + pos + '"><b>0%</b></div><div class="fp-rl">Communauté Clap</div><div class="fp-st">' + fpstars(Math.round(avg * 2) / 2) + ' <b>' + avg.toFixed(1).replace(".", ",") + '</b>/5</div><small>' + n + ' avis</small>';
-    if (rc) rc.textContent = n + " critique" + (n > 1 ? "s" : "");
+    if (!n) { box.innerHTML = '<div class="fp-ring fp-nd"><b>?</b></div><div class="fp-rl">Communauté Clap</div><small>Sois la première personne à noter</small>'; if (rc) rc.textContent = "Aucune note"; if (hist) hist.innerHTML = ""; return; }
+    var w = rs.filter(function (x) { return x.body; }).length, avg = rs.reduce(function (s, x) { return s + Number(x.rating); }, 0) / n, pos = Math.round(rs.filter(function (x) { return Number(x.rating) >= 3.5; }).length / n * 100);
+    box.innerHTML = '<div class="fp-ring fp-gold" data-t="' + pos + '"><b>0%</b></div><div class="fp-rl">Communauté Clap</div><div class="fp-st">' + fpstars(Math.round(avg * 2) / 2) + ' <b>' + avg.toFixed(1).replace(".", ",") + '</b>/5</div><small>' + n + ' note' + (n > 1 ? "s" : "") + '</small>';
+    if (rc) rc.textContent = n + " note" + (n > 1 ? "s" : "") + (w ? " · " + w + " critique" + (w > 1 ? "s" : "") : "");
     var b = [0, 0, 0, 0, 0]; rs.forEach(function (x) { b[Math.min(4, Math.ceil(Number(x.rating)) - 1)]++; }); var mx = Math.max.apply(null, b);
     if (hist) hist.innerHTML = [4, 3, 2, 1, 0].map(function (i) { return '<div class="fp-hr"><span>' + (i + 1) + ' ★</span><span class="fp-track"><i class="fp-fill" data-w="' + (b[i] / mx * 100) + '%"></i></span><span>' + b[i] + '</span></div>'; }).join("");
     var s = box.closest(".fp-sec"), r = s.querySelector(".fp-ring[data-t]"); if (s.classList.contains("fp-in") && r) startRing(r);
     var hs = document.getElementById("fp-rev"); if (hs && hs.classList.contains("fp-in")) hs.querySelectorAll("[data-w]").forEach(function (x) { x.style.width = x.dataset.w; });
   }
+  function reloadCommunity(id) { return sb.from("reviews").select("rating,body").eq("tmdb_id", id).then(function (r) { if (fEl._id === id) paintCommunity(r.data || []); }); }
+
+  // ---- Ma note (enregistrée tout de suite) et mon éventuelle critique
+  var mine = null, rewatch = false, nf = function (v) { return String(v).replace(".", ","); };
+  function setStarsUI(v) { document.querySelectorAll("#fp-q button").forEach(function (b) { var n = +b.dataset.q; b.classList.toggle("fp-f", n <= v); b.classList.toggle("fp-hf", n - .5 === v); }); }
+  function paintMine() {
+    var box = document.getElementById("fp-qr"); if (!box) return;
+    var locked = !!mine && !rewatch, n = locked ? Number(mine.rating) : 0;
+    var st = [1, 2, 3, 4, 5].map(function (k) { return '<button data-q="' + k + '" aria-label="' + k + ' étoiles"' + (locked ? " disabled" : "") + ' class="' + (n >= k ? "fp-f" : n >= k - .5 ? "fp-hf" : "") + '">★</button>'; }).join("");
+    box.innerHTML = '<span>' + (rewatch ? "Nouvelle note après revisionnage" : "Ta note") + '</span><div class="fp-q' + (locked ? " fp-lock" : "") + '" id="fp-q">' + st + '</div>' +
+      (locked ? '<div class="fp-qm"><b>' + nf(n) + ' / 5</b>' + (mine.rewatches > 0 ? " · vu " + (mine.rewatches + 1) + " fois" : "") + '</div><button class="fp-lk" data-rw="1">' + IC("rotate") + 'Revoir et renoter</button>'
+        : rewatch ? '<div class="fp-qm">Ancienne note : ' + nf(Number(mine.rating)) + ' / 5</div><button class="fp-lk" data-rwc="1">Annuler</button>' : '<small class="fp-hint">Touche une étoile, la note est enregistrée tout de suite.</small>');
+  }
+  function paintMyReview() {
+    var el = document.getElementById("fp-mine"); if (!el) return;
+    if (!mine) { el.innerHTML = '<div class="fp-mc"><b>Ton avis compte</b><p>Tu n’as pas encore critiqué ce film.</p><button class="btn main" data-a="write">' + IC("edit") + 'Écrire une critique</button></div>'; return; }
+    if (!mine.body) { el.innerHTML = '<div class="fp-mc"><b>Tu as noté ce film ' + nf(Number(mine.rating)) + ' / 5</b><p>Tu peux ajouter une critique écrite.</p><button class="btn main" data-a="write">' + IC("edit") + 'Ajouter une critique</button></div>'; return; }
+    el.innerHTML = '<div class="fp-sub" style="margin-top:0">Ta critique</div><div class="fp-mc fp-mine"><div class="fp-st">' + fpstars(Number(mine.rating)) + ' <b>' + nf(Number(mine.rating)) + '</b>/5</div>' + more(E(mine.body), "fp-mt") + '<button class="btn" data-a="write">' + IC("edit") + 'Modifier ma critique</button></div>';
+  }
+  async function loadMine(id) {
+    var me = A.me(); mine = null; rewatch = false; if (!me) { paintMine(); paintMyReview(); return; }
+    var r = await sb.from("reviews").select("rating,body,rewatches").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
+    if (r.error) r = await sb.from("reviews").select("rating,body").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
+    if (fEl._id !== id) return; mine = r.data || null; paintMine(); paintMyReview();
+  }
+  async function saveRating(v) {
+    var me = A.me(); if (!me) return A.showAuth("in", "Connecte-toi pour noter.");
+    var row = { tmdb_id: fEl._id, title: fEl._t, poster_path: fEl._p || null, rating: v }, id = fEl._id;
+    if (mine && rewatch) row.rewatches = (mine.rewatches || 0) + 1;
+    var r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" });
+    if (r.error && "rewatches" in row) { delete row.rewatches; r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" }); }
+    if (r.error) return toast("Oups, réessaie (" + r.error.message + ")");
+    toast("Note enregistrée : " + nf(v) + " / 5"); await loadMine(id); reloadCommunity(id); paintRv(); loadFeatured(id); if (A.onPublish) A.onPublish();
+  }
+  async function loadFeatured(id) {
+    var el = document.getElementById("fp-feat"); if (!el) return;
+    var r = await sb.from("reviews").select("id,rating,body,created_at,profiles!reviews_user_id_fkey(username),likes(user_id)").eq("tmdb_id", id).neq("body", "").limit(40);
+    if (fEl._id !== id || r.error) return;
+    var l = (r.data || []).sort(function (a, b) { return b.likes.length - a.likes.length || (a.created_at < b.created_at ? 1 : -1); }).slice(0, 5);
+    if (!l.length) { el.innerHTML = ""; return; }
+    el.innerHTML = '<div class="fp-sub">À la une</div><div class="fp-hs">' + l.map(function (x) {
+      var u = x.profiles.username;
+      return '<div class="fp-fc"><div class="who" style="margin:0 0 6px"><div class="av" style="--c:' + A.col(u) + ';color:#fff;width:28px;height:28px;font-size:11px">' + ini(u) + '</div><button class="un" data-u="' + E(u) + '">' + E(u) + '</button></div><div class="fp-st">' + fpstars(Number(x.rating)) + '</div><p class="fp-fx">' + E(x.body) + '</p><small>' + IC("heart") + x.likes.length + '</small></div>';
+    }).join("") + '</div>';
+  }
+  function openWrite() {
+    openCompose(fEl._t); if (!mine) return; cs.n = Number(mine.rating);
+    cEl.querySelectorAll(".pick button").forEach(function (b) { var n = +b.dataset.n; b.classList.toggle("on", n <= cs.n); b.classList.toggle("half", n - .5 === cs.n); });
+    var pv = document.getElementById("pv"); if (pv) pv.textContent = nf(cs.n) + " / 5";
+    var ct = document.getElementById("ct"), cc = document.getElementById("cc");
+    if (ct && mine.body) { ct.value = mine.body; if (cc) cc.textContent = ct.value.length + " caractère" + (ct.value.length > 1 ? "s" : ""); }
+  }
 
   // ---- Interactions
-  function quickRate(v) {
-    openCompose(fEl._t); cs.n = v;
-    cEl.querySelectorAll(".pick button").forEach(function (b) { var n = +b.dataset.n; b.classList.toggle("on", n <= v); b.classList.toggle("half", n - .5 === v); });
-    var pv = document.getElementById("pv"); if (pv) pv.textContent = String(v).replace(".", ",") + " / 5";
-  }
   fEl.addEventListener("click", function (e) {
-    var t = e.target;
-    var q = t.closest("[data-q]");
-    if (q) {
-      var r = q.getBoundingClientRect(), v = +q.dataset.q - (e.clientX - r.left < r.width / 2 ? .5 : 0);
-      document.querySelectorAll("#fp-q button").forEach(function (b) { var n = +b.dataset.q; b.classList.toggle("fp-f", n <= v); b.classList.toggle("fp-hf", n - .5 === v); });
-      return void setTimeout(function () { quickRate(v); }, 320);
-    }
+    var t = e.target, q = t.closest("[data-q]");
+    if (q && !q.disabled) { var r = q.getBoundingClientRect(), v = +q.dataset.q - (e.clientX - r.left < r.width / 2 ? .5 : 0); setStarsUI(v); return void saveRating(v); }
+    if (t.closest("[data-rw]")) { rewatch = true; paintMine(); return toast("Mode revisionnage : donne ta nouvelle note"); }
+    if (t.closest("[data-rwc]")) { rewatch = false; paintMine(); return; }
+    if (t.closest('[data-a="write"]')) return openWrite();
     var v2 = t.closest("[data-v]"); if (v2) return modal('<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v2.dataset.v) + '?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>');
     var g = t.closest("[data-g]"); if (g) return modal('<img src="' + IMG + 'w1280' + g.dataset.g + '" alt="">');
     var s = t.closest("[data-s]"); if (s) { var x = document.getElementById(s.dataset.s); if (x) fEl.scrollTo({ top: x.offsetTop - 118, behavior: "smooth" }); return; }

@@ -22,7 +22,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 4. **Listes** : colle aussi `supabase-3-listes.sql` et clique *Run*.
 5. **Profil et modération** : colle `supabase-4-profil.sql` dans le SQL Editor et clique *Run* **avant** d'envoyer la nouvelle version en ligne.
 6. **Âge et 5 favoris** : colle `supabase-5-age-favoris.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
-7. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+7. **Notes rapides** : colle `supabase-6-notes.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
+8. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -57,3 +58,8 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 
 ## Page film
 `public/film.js` : héros animé (fond qui bouge, affiche qui s'incline), cercle de score qui se remplit, note animée, communauté Clap, note rapide, sections (Aperçu, Infos, Casting, Médias, Où voir, Critiques, Saga, Dans le même esprit) avec navigation collante. `server.js` demande à TMDB les images, vidéos, recommandations, classification et saga.
+
+## Notes rapides, revisionnage, pictogrammes
+- Toucher une étoile sur une page film enregistre la note tout de suite (sans critique). La note reste affichée ; « Revoir et renoter » permet d'en donner une nouvelle (le compteur « vu 2 fois » vient de `supabase-6-notes.sql`).
+- Le fil n'affiche que les critiques avec du texte ; les notes seules apparaissent dans la page film, l'activité et le profil.
+- Les emojis d'interface sont remplacés par les pictogrammes de `public/icons.js` (fonction `IC("nom")`).

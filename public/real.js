@@ -16,15 +16,15 @@
     var u = r.profiles.username, me = A.me(), liked = me && r.likes.some(function (l) { return l.user_id === me.id; });
     var bg = r.poster_path ? "url(" + BIG + r.poster_path + ") center/cover" : "linear-gradient(160deg,#6c757d,#212529)";
     return '<article class="card" data-k="' + k + '" style="--g:' + bg + '"><div class="perf"></div><div class="perf r"></div>' +
-      (r.poster_path ? "" : '<div class="big">' + esc(r.title).toUpperCase() + '</div>') + '<div class="pop">♥</div>' +
+      (r.poster_path ? "" : '<div class="big">' + esc(r.title).toUpperCase() + '</div>') + '<div class="pop">' + IC("heart", { fill: 1 }) + '</div>' +
       '<div class="meta"><div class="who"><div class="av" style="--c:' + A.col(u) + '">' + ini(u) + '</div><button class="un" data-u="' + esc(u) + '">' + esc(u) + '</button>' +
       '<button class="open" style="margin-left:auto;font-size:13px;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px;backdrop-filter:blur(6px)">' + esc(r.title) + ' ›</button></div>' +
       '<div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? more(esc(r.body), "txt") : "") + '</div>' +
-      '<div class="rail"><button class="act like' + (liked ? " on" : "") + '"><b>♥</b><span>' + r.likes.length + '</span></button>' +
-      '<button class="act cmt"><b>💬</b><span>' + r.replies.length + '</span></button><button class="act sv"><b>🔖</b><span>Liste</span></button><button class="act sh"><b>↗</b><span>Partager</span></button></div></article>';
+      '<div class="rail"><button class="act like' + (liked ? " on" : "") + '"><b>' + IC("heart") + '</b><span>' + r.likes.length + '</span></button>' +
+      '<button class="act cmt"><b>' + IC("message") + '</b><span>' + r.replies.length + '</span></button><button class="act sv"><b>' + IC("bookmark") + '</b><span>Liste</span></button><button class="act sh"><b>' + IC("share") + '</b><span>Partager</span></button></div></article>';
   }
   async function loadFeed() {
-    var r = await sb.from("reviews").select("id,tmdb_id,title,poster_path,rating,body,created_at,profiles!reviews_user_id_fkey(username),likes(user_id),replies(id)").order("created_at", { ascending: false }).limit(30);
+    var r = await sb.from("reviews").select("id,tmdb_id,title,poster_path,rating,body,created_at,profiles!reviews_user_id_fkey(username),likes(user_id),replies(id)").neq("body", "").order("created_at", { ascending: false }).limit(30);
     if (r.error) { f2.innerHTML = '<div class="pad"><p>Impossible de charger le fil.<br><small>Détail : ' + esc(r.error.message) + '</small></p></div>'; return; }
     data = r.data;
     f2.innerHTML = data.length ? data.map(card).join("") : '<div class="pad"><h2>Le fil est vide</h2><p style="color:var(--muted)">Sois la première personne à critiquer un film sur Clap.</p><button class="btn main" id="feedw" style="width:100%;margin-top:12px">Écrire une critique</button></div>';

@@ -29,7 +29,7 @@
 
   // ---- Onglet Activité (remplace « Séances », qui reviendra plus tard)
   var old = document.getElementById("seance"), tab = old.cloneNode(true);
-  tab.removeAttribute("id"); tab.dataset.v = "act"; tab.innerHTML = "<span>🔔</span>Activité"; old.replaceWith(tab);
+  tab.removeAttribute("id"); tab.dataset.v = "act"; tab.innerHTML = "<span>" + IC("bell") + "</span>Activité"; old.replaceWith(tab);
   tab.addEventListener("click", function () { show("act"); loadAct(); });
 
   async function loadAct() {

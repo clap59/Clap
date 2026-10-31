@@ -158,7 +158,7 @@ h2{font:400 28px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;margin:8px 0 12p
 <div class="app">
   <header class="top">
     <div class="logo"><img src="logo.svg" alt="" width="32" height="32">CLAP</div>
-    <button class="ico" id="theme" aria-label="Changer de thème">◐</button>
+    <button class="ico" id="theme" aria-label="Changer de thème" data-ic="contrast"></button>
   </header>
   <div class="stories" id="stories"></div>
   <main class="views">
@@ -180,11 +180,11 @@ h2{font:400 28px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;margin:8px 0 12p
     </div></section>
   </main>
   <nav class="bar">
-    <button class="tab on" data-v="feed"><span>▶</span>Fil</button>
-    <button class="tab" data-v="disc"><span>✦</span>Découvrir</button>
+    <button class="tab on" data-v="feed"><span data-ic="film"></span>Fil</button>
+    <button class="tab" data-v="disc"><span data-ic="compass"></span>Découvrir</button>
     <button class="plus" id="add" aria-label="Poster une critique">+</button>
     <button class="tab" id="seance"><span>🎟</span>Séances</button>
-    <button class="tab" data-v="prof"><span>●</span>Profil</button>
+    <button class="tab" data-v="prof"><span data-ic="user"></span>Profil</button>
   </nav>
   <section class="film" id="film" aria-label="Fiche du film"></section>
   <section class="compose" id="compose" aria-label="Nouvelle critique"></section>
@@ -376,6 +376,7 @@ document.getElementById("theme").addEventListener("click",function(){
 <script>window.__REC=/type=recovery/.test(location.hash);</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
+<script src="icons.js"></script>
 <script src="tmdb.js"></script>
 <script src="auth.js"></script>
 <script src="social.js"></script>

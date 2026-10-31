@@ -16,7 +16,7 @@
   document.head.appendChild(st);
 
   var au = document.createElement("div"); au.className = "sheet"; au.id = "auth"; $(".app").appendChild(au);
-  var btn = document.createElement("button"); btn.className = "ico"; btn.textContent = "👤";
+  var btn = document.createElement("button"); btn.className = "ico"; btn.innerHTML = IC("user");
   btn.setAttribute("aria-label", "Compte"); btn.style.cssText = "margin-left:auto;margin-right:8px";
   document.getElementById("theme").before(btn);
 
@@ -60,7 +60,7 @@
       for (var i = 0; i < FS.length; i++) { r = await sb.from("profiles").select(FS[i]).eq("id", me.id).single(); if (!r.error) break; }
       prof = r.data;
     }
-    btn.textContent = prof ? ini(prof.username) : "👤";
+    if (prof) btn.textContent = ini(prof.username); else btn.innerHTML = IC("user");
     if (window.CLAP_API && CLAP_API.onUser) CLAP_API.onUser();
     var h = $("#prof h2"), av = $("#prof .av"), nb = document.querySelectorAll("#prof .nums b");
     if (prof) {
@@ -79,7 +79,7 @@
     var reps = r.replies.slice().sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
     return '<div class="rv"><div class="who"><div class="av" style="--c:' + col(u) + ';color:#fff">' + ini(u) + '</div><button class="un" data-u="' + esc(u) + '">' + esc(u) + '</button></div><div class="stars">' + stars(Number(r.rating)) + '</div>' +
       (r.body ? more(esc(r.body), "") : "") +
-      '<div class="rx"><button class="xl' + (liked ? " on" : "") + '" data-i="' + r.id + '">♥ ' + r.likes.length + '</button><button class="xr" data-i="' + r.id + '">💬 ' + reps.length + ' Répondre</button></div>' +
+      '<div class="rx"><button class="xl' + (liked ? " on" : "") + '" data-i="' + r.id + '">' + IC("heart") + ' ' + r.likes.length + '</button><button class="xr" data-i="' + r.id + '">' + IC("message") + ' ' + reps.length + ' Répondre</button></div>' +
       reps.map(function (p) { return '<div class="rp"><div class="av" style="--c:' + col(p.profiles.username) + '">' + ini(p.profiles.username) + '</div><div><button class="un" data-u="' + esc(p.profiles.username) + '">' + esc(p.profiles.username) + '</button><br>' + esc(p.body) + '</div></div>'; }).join("") +
       '<div class="rf" id="xf' + r.id + '"><input maxlength="500" placeholder="Répondre à ' + esc(u) + '…"><button class="xs" data-i="' + r.id + '">Envoyer</button></div></div>';
   }
@@ -88,7 +88,8 @@
     var r = await sb.from("reviews").select("id,rating,body,created_at,user_id,profiles!reviews_user_id_fkey(username),likes(user_id),replies(id,body,created_at,profiles(username))").eq("tmdb_id", id).order("created_at", { ascending: false });
     if (fEl._id !== id) return;
     if (r.error) { console.error(r.error); el.innerHTML = '<p style="color:var(--muted)">Impossible de charger les critiques.<br><small>Détail : ' + esc(r.error.message || "") + ' ' + esc(r.error.hint || "") + '</small></p>'; return; }
-    el.innerHTML = r.data.length ? r.data.map(rv).join("") : '<p style="color:var(--muted)">Aucune critique pour l’instant. Sois la première personne à donner ton avis.</p>';
+    var written = r.data.filter(function (x) { return x.body; }), quiet = r.data.length - written.length;
+    el.innerHTML = (written.length ? written.map(rv).join("") : '<p style="color:var(--muted)">Aucune critique écrite pour l’instant.</p>') + (quiet ? '<p style="color:var(--muted);margin-top:12px;font-size:13px">' + quiet + ' autre' + (quiet > 1 ? "s" : "") + ' personne' + (quiet > 1 ? "s ont" : " a") + ' noté ce film sans critique.</p>' : "");
   };
   fEl.addEventListener("click", async function (e) {
     var el = e.target.closest(".xl,.xr,.xs"); if (!el) return;
