@@ -78,14 +78,14 @@
     var u = r.profiles.username, liked = me && r.likes.some(function (l) { return l.user_id === me.id; });
     var reps = r.replies.slice().sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
     return '<div class="rv"><div class="who"><div class="av" style="--c:' + col(u) + ';color:#fff">' + ini(u) + '</div><button class="un" data-u="' + esc(u) + '">' + esc(u) + '</button></div><div class="stars">' + stars(Number(r.rating)) + '</div>' +
-      (r.body ? more(esc(r.body), "") : "") +
+      (r.body ? SPO(r.spoiler, more(esc(r.body), "")) : "") +
       '<div class="rx"><button class="xl' + (liked ? " on" : "") + '" data-i="' + r.id + '">' + IC("heart") + ' ' + r.likes.length + '</button><button class="xr" data-i="' + r.id + '">' + IC("message") + ' ' + reps.length + ' Répondre</button></div>' +
       reps.map(function (p) { return '<div class="rp"><div class="av" style="--c:' + col(p.profiles.username) + '">' + ini(p.profiles.username) + '</div><div><button class="un" data-u="' + esc(p.profiles.username) + '">' + esc(p.profiles.username) + '</button><br>' + esc(p.body) + '</div></div>'; }).join("") +
       '<div class="rf" id="xf' + r.id + '"><input maxlength="500" placeholder="Répondre à ' + esc(u) + '…"><button class="xs" data-i="' + r.id + '">Envoyer</button></div></div>';
   }
   window.paintRv = async function () {
     var el = document.getElementById("rvs"), id = fEl._id; if (!el || !id) return;
-    var r = await sb.from("reviews").select("id,rating,body,created_at,user_id,profiles!reviews_user_id_fkey(username),likes(user_id),replies(id,body,created_at,profiles(username))").eq("tmdb_id", id).order("created_at", { ascending: false });
+    var r = await sb.from("reviews").select("id,rating,body,spoiler,created_at,user_id,profiles!reviews_user_id_fkey(username),likes(user_id),replies(id,body,created_at,profiles(username))").eq("tmdb_id", id).order("created_at", { ascending: false });
     if (fEl._id !== id) return;
     if (r.error) { console.error(r.error); el.innerHTML = '<p style="color:var(--muted)">Impossible de charger les critiques.<br><small>Détail : ' + esc(r.error.message || "") + ' ' + esc(r.error.hint || "") + '</small></p>'; return; }
     var written = r.data.filter(function (x) { return x.body; }), quiet = r.data.length - written.length;

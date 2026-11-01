@@ -24,7 +24,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 6. **Âge et 5 favoris** : colle `supabase-5-age-favoris.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
 7. **Notes rapides** : colle `supabase-6-notes.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
 8. **Calendrier** : colle `supabase-7-calendrier.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
-9. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+9. **Avis, spoilers, statistiques, J'aime** : colle `supabase-8-avis-stats.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne, sinon les listes de critiques affichent une erreur).
+10. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -70,3 +71,10 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - `public/compose.js` : fenêtre « Nouvelle critique » (recherche de film TMDB avec croix pour changer, date de visionnage par défaut aujourd'hui, interrupteur « J'ai revu ce film »).
 - `public/calendar.js` : calendrier mensuel sur le profil (et sur les profils publics) ; toucher un jour affiche les films vus et permet d'en ajouter un.
 - Une seule critique écrite par film et par personne (la dernière) ; chaque visionnage garde sa date et sa note.
+
+## Journal des visionnages, avis, statistiques
+- `public/diary.js` : un seul endroit pour ajouter, modifier et supprimer les visionnages. La critique publique d'un film = la note du visionnage le plus récent + le dernier texte écrit ; chaque visionnage garde son propre texte (historique).
+- Spoilers : interrupteur dans la fenêtre de critique ; le texte est flouté derrière un bouton partout (`SPO()`).
+- `public/profile2.js` : « Notes et critiques » avec « Afficher plus » + statistiques (films vus, revisionnages, temps passé, répartition des notes, genres, décennies, réalisateurs, activité sur 12 mois, séries, records). Les infos de film (durée, genres…) sont stockées dans `watches.meta` ; pour les anciens films elles sont récupérées par lots de 12 à chaque visite du profil.
+- Table `film_reactions` : J'aime / Je n'aime pas (base des futures recommandations).
+- Flèche discrète « remonter » : `#totop`, visible quand on a défilé de plus de 500 px (profil, page film, découvrir, activité).

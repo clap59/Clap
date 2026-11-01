@@ -9,7 +9,7 @@
   var st = document.createElement("style");
   st.textContent = '.cal{text-align:left;margin-bottom:6px}.cal-top{display:flex;align-items:center;justify-content:space-between;margin:2px 0 4px}.cal-top b{font:400 26px/1 "Bebas Neue",sans-serif;letter-spacing:.04em;text-transform:capitalize}' +
     '.cal-nav{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;transition:transform .15s}.cal-nav:active{transform:scale(.9)}.cal-nav:disabled{opacity:.3}' +
-    '.cal-sum{color:var(--muted);font-size:13px;margin:0 0 10px}.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cal-w{text-align:center;font-size:11px;color:var(--muted);font-weight:700;padding-bottom:2px}' +
+    '.cal-tot{margin:2px 0 10px;color:var(--muted);font-size:14px}.cal-tot b{font:400 36px/1 "Bebas Neue",sans-serif;color:var(--text);margin-right:6px;vertical-align:-4px}.cal-tot small{display:block;font-size:12px;margin-top:2px}.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cal-w{text-align:center;font-size:11px;color:var(--muted);font-weight:700;padding-bottom:2px}' +
     '.cal-d{position:relative;aspect-ratio:3/4;border-radius:9px;background:var(--surface);border:1px solid var(--line);overflow:hidden;color:var(--muted);font-size:11px;text-align:left;padding:4px 5px;transition:transform .15s,box-shadow .2s}.cal-d:disabled{opacity:.45}' +
     '.cal-d.cal-has{background:var(--cp,linear-gradient(160deg,#6c757d,#212529)) center/cover;border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.25)}.cal-d.cal-has::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent 55%)}' +
     '.cal-d i{position:relative;z-index:1;font-style:normal;font-weight:700}.cal-d b{position:absolute;z-index:1;right:4px;bottom:4px;font-size:10px;padding:1px 6px;border-radius:99px;background:rgba(0,0,0,.72);color:#fff}' +
@@ -40,9 +40,9 @@
           (l.length ? l.map(function (w) { return '<button class="cal-li" data-id="' + w.tmdb_id + '"><div class="cal-th" style="background-image:url(' + (w.poster_path ? TM + w.poster_path : "") + ')"></div><div><b>' + E(w.title) + '</b><div class="stars">' + (w.rating ? stars(Number(w.rating)) : "") + '</div></div></button>'; }).join("") : '<p class="cal-hint" style="margin-top:0">Aucun film ce jour-là.</p>') +
           (mine ? '<button class="btn main" data-add="' + selDay + '">' + IC("plus") + 'Ajouter un film</button>' : "") + '</div>';
       }
-      var isNow = y === now.getFullYear() && m === now.getMonth();
+      var isNow = y === now.getFullYear() && m === now.getMonth(), distinct = new Set(data.map(function (w) { return w.tmdb_id; })).size, rev = data.length - distinct;
       el.innerHTML = '<div class="cal-top"><button class="cal-nav" data-n="-1" aria-label="Mois précédent">' + IC("chevl") + '</button><b>' + MO[m] + " " + y + '</b><button class="cal-nav" data-n="1" aria-label="Mois suivant"' + (isNow ? " disabled" : "") + '>' + IC("chevr") + '</button></div>' +
-        '<div class="cal-sum">' + (data.length ? data.length + " visionnage" + (data.length > 1 ? "s" : "") + " ce mois-ci" : "Aucun film ce mois-ci") + '</div>' +
+        '<div class="cal-tot">' + (data.length ? '<b>' + distinct + '</b>film' + (distinct > 1 ? "s" : "") + ' vu' + (distinct > 1 ? "s" : "") + ' ce mois-ci' + (rev > 0 ? '<small>dont ' + rev + ' revisionnage' + (rev > 1 ? "s" : "") + '</small>' : "") : "Aucun film vu ce mois-ci") + '</div>' +
         '<div class="cal-g">' + DW.map(function (x) { return '<div class="cal-w">' + x + '</div>'; }).join("") + cells + '</div>' + detail +
         (mine && !selDay ? '<p class="cal-hint">Touche un jour pour voir ou ajouter un film.</p>' : "");
     }

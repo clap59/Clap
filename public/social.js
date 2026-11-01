@@ -16,12 +16,13 @@
     return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
   }
   function av(u, size) { return '<div class="av" style="--c:' + A.col(u) + ';color:#fff;width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * .36) + 'px;flex:none">' + ini(u) + '</div>'; }
-  function item(r, u) {
+  function item(r, u, own) {
     return '<div class="act-i" data-f="' + r.tmdb_id + '">' + (r.poster_path ? '<img src="' + IMG + r.poster_path + '" alt="">' : '<div class="nop"></div>') +
       '<div style="min-width:0;flex:1">' + (u ? '<div class="who" style="margin:0 0 4px">' + av(u, 26) + '<button class="un" data-u="' + esc(u) + '">' + esc(u) + '</button><small style="color:var(--muted);margin-left:auto">' + ago(r.created_at) + '</small></div>' : '<small style="color:var(--muted)">' + ago(r.created_at) + '</small><br>') +
-      '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? more(esc(r.body), "") : "") + '</div></div>';
+      '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? SPO(r.spoiler, more(esc(r.body), "")) : "") + (own ? '<div class="act-ctl"><button data-ce="' + r.tmdb_id + '" aria-label="Modifier">' + IC("edit") + '</button><button data-cd="' + r.tmdb_id + '" aria-label="Supprimer">' + IC("trash") + '</button></div>' : "") + '</div></div>';
   }
-  var cols = "id,tmdb_id,title,poster_path,rating,body,created_at";
+  window.CLAP_ITEM = function () { return item.apply(null, arguments); };
+  var cols = "id,tmdb_id,title,poster_path,rating,body,spoiler,created_at";
   function bioHTML(u) {
     var f = u.fav_films || [];
     return (u.bio ? '<p style="margin:8px 0">' + esc(u.bio) + '</p>' : "") + (f.length ? '<h2 style="margin:14px 0 8px">Ses ' + f.length + ' favoris</h2><div class="grid" style="grid-template-columns:repeat(5,1fr)">' + f.map(function (x) { return '<button class="po" data-id="' + x.id + '" title="' + esc(x.title) + '" style="--g:' + (x.poster ? "url(https://image.tmdb.org/t/p/w185" + x.poster + ") center/cover" : "var(--line)") + '"><span></span></button>'; }).join("") + '</div>' : "");
@@ -75,9 +76,10 @@
       '<p style="color:var(--muted)">Membre depuis ' + new Date(u.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) + '</p>' +
       bioHTML(u) + '<div class="nums" style="gap:20px"><div><b>' + rv.length + '</b>critiques</div><div><b>' + (avg ? avg.toFixed(1).replace(".", ",") : "–") + '</b>note moyenne</div><div><b id="nfol">' + (res[1].count || 0) + '</b>abonnés</div><div><b>' + (res[2].count || 0) + '</b>abonnements</div></div>' +
       (isMe ? '<p style="color:var(--muted)">C’est ton profil</p>' : '<button class="fw' + (fol ? " on" : "") + '" data-fid="' + u.id + '">' + (fol ? "Suivi" : "Suivre") + '</button>') +
-      '<div id="ucal"></div><div id="ulists" style="text-align:left"></div><div style="text-align:left"><h2>Critiques</h2>' + (rv.length ? rv.map(function (x) { return item(x, null); }).join("") : '<p style="color:var(--muted)">Aucune critique pour l’instant.</p>') + '</div></div>';
+      '<div id="ucal"></div><div id="ulists" style="text-align:left"></div><div id="ucrit" style="text-align:left"></div><div id="ustat" style="text-align:left"></div></div>';
     if (window.CLAP_LISTS) CLAP_LISTS.paintUser(u.id);
     if (window.CLAP_CAL) CLAP_CAL.paintUser(u.id);
+    if (window.CLAP_PROF) CLAP_PROF.paintUser(u.id, !!isMe);
   }
 
   // ---- Clics (délégués)

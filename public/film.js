@@ -63,6 +63,10 @@
 .fp-q button:disabled{cursor:default}.fp-q.fp-lock button{transform:none}
 .fp-mc{margin:0 0 16px;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}.fp-mc p{margin:6px 0 12px;color:var(--muted)}.fp-mc.fp-mine{border-color:var(--accent);box-shadow:0 8px 28px color-mix(in srgb,var(--accent) 18%,transparent)}.fp-mt{margin:8px 0 12px;line-height:1.55;white-space:pre-line}
 .fp-fc{flex:none;width:250px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}.fp-fc small{color:var(--muted);display:inline-flex;gap:5px;align-items:center}.fp-fx{margin:6px 0 8px;font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.fp-acts .btn.fp-seen-on{border-color:#22c55e;color:#22c55e}.fp-acts .btn.fp-r-on{border-color:var(--accent);color:var(--accent)}.fp-acts .btn span{margin-left:6px;font-variant-numeric:tabular-nums}.fp-lk.fp-fr{border-color:var(--accent);color:var(--accent)}
+.fp-tg{display:inline-block;padding:2px 8px;border-radius:99px;background:rgba(128,128,128,.22);font-size:11px;font-weight:700;color:var(--muted);vertical-align:2px}.fp-dt{display:block;color:var(--muted);font-size:12px;margin-top:4px}.fp-mb2{display:flex;gap:8px;flex-wrap:wrap}.fp-mb2 .btn{flex:none;padding:10px 14px}
+.fp-his{margin-top:8px}.fp-his summary{cursor:pointer;font-weight:700;padding:10px 2px;list-style:none;color:var(--muted)}.fp-his summary::-webkit-details-marker{display:none}.fp-his[open] summary{color:var(--text)}
+.fp-hv{display:flex;gap:10px;justify-content:space-between;padding:12px 2px;border-top:1px solid var(--line)}.fp-hv small{color:var(--muted)}.fp-hx{margin:6px 0 0;font-size:14px;line-height:1.45;white-space:pre-line}.fp-hb{display:flex;gap:6px;flex:none;align-items:flex-start}.fp-hb button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.fp-wrap *{animation:none!important;transition:none!important}.fp-rv{opacity:1;transform:none}.fp-rv:not(.fp-in) .fp-s{opacity:1}}`;
   document.head.appendChild(st);
 
@@ -109,7 +113,7 @@
   function render(m) {
     var posterCss = m.poster_path ? "url(" + IMG + "w342" + m.poster_path + ") center/cover" : "linear-gradient(160deg,#6c757d,#212529)";
     if (!all.some(function (a) { return a[0] === m.title; })) all.push([m.title, posterCss, m.id, m.poster_path]);
-    fEl._t = m.title; fEl._id = m.id; fEl._p = m.poster_path; fEl._y = (m.release_date || "").slice(0, 4);
+    fEl._t = m.title; fEl._id = m.id; fEl._p = m.poster_path; fEl._y = (m.release_date || "").slice(0, 4); fEl._meta = CLAP_DIARY.buildMeta(m);
     var cr = (m.credits || {}).crew || [], cast = ((m.credits || {}).cast || []).slice(0, 14), yr = (m.release_date || "").slice(0, 4);
     var names = function (re) { var o = []; cr.forEach(function (c) { if (re.test(c.job) && o.indexOf(c.name) < 0) o.push(c.name); }); return o.slice(0, 3).map(E).join(", "); };
     var vids = (((m.videos || {}).results) || []).filter(function (v) { return v.site === "YouTube"; });
@@ -134,7 +138,7 @@
     var ov = '<div class="fp-scores"><div class="fp-ringw">' + (p >= 0 ? '<div class="fp-ring" data-t="' + p + '"><b>0%</b></div><div class="fp-rl">' + verdict(p) + '</div><div class="fp-st">' + fpstars(Math.round(a5 * 2) / 2) + ' <b>' + a5.toFixed(1).replace(".", ",") + '</b>/5</div><small>' + m.vote_count.toLocaleString("fr-FR") + ' notes · TMDB</small>' : '<div class="fp-ring fp-nd"><b>–</b></div><div class="fp-rl">Pas encore noté</div>') + '</div>' +
       '<div class="fp-ringw" id="fp-clap"><div class="fp-ring fp-nd"><b>?</b></div><div class="fp-rl">Communauté Clap</div><small>Chargement…</small></div></div>' +
       '<div class="fp-qr" id="fp-qr"></div>' +
-      '<div class="fp-acts"><button class="btn" data-l="1">' + IC("plus") + 'Liste</button><button class="btn main" data-a="write">' + IC("edit") + 'Critiquer</button></div>' +
+      '<div class="fp-acts"><button class="btn" id="fp-seen" data-seen="1">' + IC("eye") + 'Vu</button><button class="btn" id="fp-up" data-react="1" aria-label="J’aime">' + IC("thumbup") + '<span>0</span></button><button class="btn" id="fp-dn" data-react="-1" aria-label="Je n’aime pas">' + IC("thumbdown") + '<span>0</span></button></div><div class="fp-acts"><button class="btn" data-l="1">' + IC("plus") + 'Liste</button><button class="btn main" data-a="write">' + IC("edit") + 'Critiquer</button></div>' +
       (trailer ? '<div class="fp-acts"><button class="btn" data-v="' + E(trailer.key) + '" style="width:100%">' + IC("play") + 'Voir la bande-annonce</button></div>' : "") +
       '<div class="fp-facts">' + facts.map(function (f) { return '<div class="fp-fact">' + IC(f[0]) + E(f[1]) + '</div>'; }).join("") + '</div>' +
       (m.tagline ? '<p class="fp-tl">« ' + E(m.tagline) + ' »</p>' : "") + more(E(m.overview || "Pas de synopsis en français pour le moment."), "fp-syn");
@@ -217,62 +221,103 @@
   }
   function reloadCommunity(id) { return sb.from("reviews").select("rating,body").eq("tmdb_id", id).then(function (r) { if (fEl._id === id) paintCommunity(r.data || []); }); }
 
-  // ---- Ma note (enregistrée tout de suite) et mon éventuelle critique
-  var mine = null, rewatch = false, nf = function (v) { return String(v).replace(".", ","); };
+  // ---- Ma note, mes visionnages, ma critique, J'aime / Je n'aime pas
+  var mine = null, rows = [], rewatch = false, firstRw = false, react = 0, rc = { up: 0, down: 0 };
+  var nf = function (v) { return String(v).replace(".", ","); }, D = function () { return window.CLAP_DIARY; };
+  var fdate = function (d) { return new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }); };
+  function filmObj() { return { id: fEl._id, title: fEl._t, poster_path: fEl._p, year: fEl._y }; }
   function setStarsUI(v) { document.querySelectorAll("#fp-q button").forEach(function (b) { var n = +b.dataset.q; b.classList.toggle("fp-f", n <= v); b.classList.toggle("fp-hf", n - .5 === v); }); }
   function paintMine() {
     var box = document.getElementById("fp-qr"); if (!box) return;
-    var locked = !!mine && !rewatch, n = locked ? Number(mine.rating) : 0;
+    var locked = !!mine && !rewatch, n = locked ? Number(mine.rating) : 0, flagged = rows.some(function (w) { return w.rewatch; });
     var st = [1, 2, 3, 4, 5].map(function (k) { return '<button data-q="' + k + '" aria-label="' + k + ' étoiles"' + (locked ? " disabled" : "") + ' class="' + (n >= k ? "fp-f" : n >= k - .5 ? "fp-hf" : "") + '">★</button>'; }).join("");
+    var info = rows.length > 1 ? " · vu " + rows.length + " fois" : (flagged ? " · revu" : "");
     box.innerHTML = '<span>' + (rewatch ? "Nouvelle note après revisionnage" : "Ta note") + '</span><div class="fp-q' + (locked ? " fp-lock" : "") + '" id="fp-q">' + st + '</div>' +
-      (locked ? '<div class="fp-qm"><b>' + nf(n) + ' / 5</b>' + (mine.views > 1 ? " · vu " + mine.views + " fois" : "") + '</div><button class="fp-lk" data-rw="1">' + IC("rotate") + 'Revoir et renoter</button> <button class="fp-lk" data-rwcrit="1">' + IC("edit") + 'Revoir et critiquer</button>'
-        : rewatch ? '<div class="fp-qm">Ancienne note : ' + nf(Number(mine.rating)) + ' / 5</div><button class="fp-lk" data-rwc="1">Annuler</button>' : '<small class="fp-hint">Touche une étoile, la note est enregistrée tout de suite.</small>');
+      (locked ? '<div class="fp-qm"><b>' + nf(n) + ' / 5</b>' + info + '</div><button class="fp-lk" data-rw="1">' + IC("rotate") + 'Revoir et renoter</button> <button class="fp-lk" data-rwcrit="1">' + IC("edit") + 'Revoir et critiquer</button>'
+        : rewatch ? '<div class="fp-qm">Ancienne note : ' + nf(Number(mine.rating)) + ' / 5</div><button class="fp-lk" data-rwc="1">Annuler</button>'
+        : '<small class="fp-hint">Touche une étoile, la note est enregistrée tout de suite.</small><button class="fp-lk' + (firstRw ? " fp-fr" : "") + '" data-fr="1">' + IC("rotate") + (firstRw ? "Compté comme revisionnage" : "Je l’avais déjà vu avant") + '</button>');
+  }
+  function paintActions() {
+    var s = document.getElementById("fp-seen"), u = document.getElementById("fp-up"), d = document.getElementById("fp-dn");
+    if (s) { s.classList.toggle("fp-seen-on", rows.length > 0); s.innerHTML = IC(rows.length ? "check" : "eye") + "Vu"; }
+    if (u) { u.classList.toggle("fp-r-on", react === 1); u.querySelector("span").textContent = rc.up; }
+    if (d) { d.classList.toggle("fp-r-on", react === -1); d.querySelector("span").textContent = rc.down; }
   }
   function paintMyReview() {
     var el = document.getElementById("fp-mine"); if (!el) return;
-    if (!mine) { el.innerHTML = '<div class="fp-mc"><b>Ton avis compte</b><p>Tu n’as pas encore critiqué ce film.</p><button class="btn main" data-a="write">' + IC("edit") + 'Écrire une critique</button></div>'; return; }
-    if (!mine.body) { el.innerHTML = '<div class="fp-mc"><b>Tu as noté ce film ' + nf(Number(mine.rating)) + ' / 5</b><p>Tu peux ajouter une critique écrite.</p><button class="btn main" data-a="write">' + IC("edit") + 'Ajouter une critique</button></div>'; return; }
-    el.innerHTML = '<div class="fp-sub" style="margin-top:0">Ta critique</div><div class="fp-mc fp-mine"><div class="fp-st">' + fpstars(Number(mine.rating)) + ' <b>' + nf(Number(mine.rating)) + '</b>/5</div>' + more(E(mine.body), "fp-mt") + '<button class="btn" data-a="write">' + IC("edit") + 'Modifier ma critique</button> <button class="btn" data-rwcrit="1">' + IC("rotate") + 'Revoir et critiquer</button></div>';
+    var tx = rows.filter(function (w) { return w.body; })[0];
+    if (!rows.length && !mine) { el.innerHTML = '<div class="fp-mc"><b>Ton avis compte</b><p>Tu n’as pas encore critiqué ce film.</p><button class="btn main" data-a="write">' + IC("edit") + 'Écrire une critique</button></div>'; return; }
+    var rt = mine ? Number(mine.rating) : (tx && tx.rating != null ? Number(tx.rating) : null), top;
+    if (!tx) top = '<div class="fp-mc"><b>' + (mine ? "Tu as noté ce film " + nf(rt) + " / 5" : "Tu as marqué ce film comme vu") + '</b><p>Tu peux ajouter une critique écrite.</p><button class="btn main" data-a="write">' + IC("edit") + 'Écrire une critique</button></div>';
+    else top = '<div class="fp-sub" style="margin-top:0">Ta critique</div><div class="fp-mc fp-mine"><div class="fp-st">' + (rt != null ? fpstars(rt) + ' <b>' + nf(rt) + '</b>/5' : "") + (tx.spoiler ? ' <span class="fp-tg">Spoiler</span>' : "") + '</div><small class="fp-dt">Écrite pour le visionnage du ' + fdate(tx.watched_on) + '</small>' + more(E(tx.body), "fp-mt") +
+      '<div class="fp-mb2"><button class="btn" data-wedit="' + tx.id + '">' + IC("edit") + 'Modifier</button><button class="btn" data-delcrit="1">' + IC("trash") + 'Supprimer</button><button class="btn" data-rwcrit="1">' + IC("rotate") + 'Revoir et critiquer</button></div></div>';
+    var his = rows.length ? '<details class="fp-his"><summary>Mes visionnages (' + rows.length + ')</summary>' + rows.map(function (w) {
+      return '<div class="fp-hv"><div style="min-width:0;flex:1"><b>' + fdate(w.watched_on) + '</b>' + (w.rewatch ? ' <span class="fp-tg">Revu</span>' : "") + (w.rating != null ? '<div class="stars">' + stars(Number(w.rating)) + '</div>' : '<div><small>Marqué comme vu</small></div>') + (w.body ? SPO(w.spoiler, '<p class="fp-hx">' + E(w.body) + '</p>') : "") + '</div><div class="fp-hb"><button data-we="' + w.id + '" aria-label="Modifier ce visionnage">' + IC("edit") + '</button><button data-wd="' + w.id + '" aria-label="Supprimer ce visionnage">' + IC("trash") + '</button></div></div>';
+    }).join("") + '</details>' : "";
+    el.innerHTML = top + his;
+  }
+  async function loadReact(id) {
+    var me = A.me(), r = await sb.from("film_reactions").select("user_id,reaction").eq("tmdb_id", id); if (r.error || fEl._id !== id) return;
+    var d = r.data || []; rc = { up: d.filter(function (x) { return x.reaction === 1; }).length, down: d.filter(function (x) { return x.reaction === -1; }).length };
+    var m = me && d.filter(function (x) { return x.user_id === me.id; })[0]; react = m ? m.reaction : 0; paintActions();
+  }
+  async function setReact(v) {
+    var me = A.me(); if (!me) return A.showAuth("in", "Connecte-toi pour réagir."); var id = fEl._id, next = react === v ? 0 : v;
+    var r = next === 0 ? await sb.from("film_reactions").delete().eq("user_id", me.id).eq("tmdb_id", id) : await sb.from("film_reactions").upsert({ tmdb_id: id, title: fEl._t, poster_path: fEl._p || null, reaction: next }, { onConflict: "user_id,tmdb_id" });
+    if (r.error) return toast("Oups : " + r.error.message); await loadReact(id); if (A.onPublish) A.onPublish();
   }
   async function loadMine(id) {
-    var me = A.me(); mine = null; rewatch = false; if (!me) { paintMine(); paintMyReview(); return; }
-    var r = await sb.from("reviews").select("rating,body,rewatches").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
-    if (r.error) r = await sb.from("reviews").select("rating,body").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle();
-    var c = await sb.from("watches").select("id", { count: "exact", head: true }).eq("tmdb_id", id).eq("user_id", me.id);
-    if (fEl._id !== id) return; mine = r.data || null;
-    if (mine) mine.views = !c.error && c.count ? c.count : (mine.rewatches || 0) + 1;
-    paintMine(); paintMyReview();
+    var me = A.me(); mine = null; rows = []; rewatch = false; if (!me) { paintMine(); paintMyReview(); paintActions(); return; }
+    var rs = await Promise.all([sb.from("reviews").select("rating,body,spoiler").eq("tmdb_id", id).eq("user_id", me.id).maybeSingle(), D().list(id)]);
+    if (fEl._id !== id) return; mine = rs[0].data || null; rows = rs[1] || [];
+    paintMine(); paintMyReview(); paintActions(); loadReact(id);
   }
+  async function refresh(id) { await loadMine(id); reloadCommunity(id); paintRv(); loadFeatured(id); if (A.onPublish) A.onPublish(); }
   async function saveRating(v) {
     var me = A.me(); if (!me) return A.showAuth("in", "Connecte-toi pour noter.");
-    var id = fEl._id, row = { tmdb_id: id, title: fEl._t, poster_path: fEl._p || null, rating: v }, again = !!mine && rewatch;
-    if (again) row.rewatches = (mine.rewatches || 0) + 1;
-    var r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" });
-    if (r.error && "rewatches" in row) { delete row.rewatches; r = await sb.from("reviews").upsert(row, { onConflict: "user_id,tmdb_id" }); }
-    if (r.error) return toast("Oups, réessaie (" + r.error.message + ")");
-    if (!mine || again) await sb.from("watches").insert({ tmdb_id: id, title: fEl._t, poster_path: fEl._p || null, rating: v, watched_on: new Date().toLocaleDateString("sv-SE") });
-    toast("Note enregistrée : " + nf(v) + " / 5"); await loadMine(id); reloadCommunity(id); paintRv(); loadFeatured(id); if (A.onPublish) A.onPublish();
+    var id = fEl._id, res = await D().rate(filmObj(), v, { again: !!mine && rewatch, flag: firstRw, meta: fEl._meta });
+    if (res && res.error) return toast("Oups, réessaie (" + res.error.message + ")");
+    firstRw = false; toast("Note enregistrée : " + nf(v) + " / 5"); refresh(id);
+  }
+  async function toggleSeen() {
+    var id = fEl._id;
+    if (!rows.length) { var r = await D().markSeen(filmObj(), fEl._meta); if (r.error) return toast("Oups : " + r.error.message); toast("Marqué comme vu"); return refresh(id); }
+    var ok = await CONFIRM("Retirer des films vus ?", "Tous tes visionnages, ta note et ta critique de ce film seront supprimés.", "Retirer"); if (!ok) return;
+    await D().removeAll(filmObj()); toast("Retiré de tes films vus"); refresh(id);
+  }
+  async function delWatch(wid) {
+    var ok = await CONFIRM("Supprimer ce visionnage ?", "Il disparaîtra de ton calendrier et de tes statistiques.", "Supprimer"); if (!ok) return;
+    var id = fEl._id, r = await D().remove(wid, filmObj()); if (r.error) return toast("Oups : " + r.error.message); toast("Visionnage supprimé"); refresh(id);
+  }
+  async function delCrit() {
+    var ok = await CONFIRM("Supprimer ta critique ?", "Ton texte sera effacé. Ta note et tes visionnages sont conservés.", "Supprimer"); if (!ok) return;
+    var id = fEl._id, r = await D().clearCritique(filmObj()); if (r.error) return toast("Oups : " + r.error.message); toast("Critique supprimée"); refresh(id);
   }
   async function loadFeatured(id) {
     var el = document.getElementById("fp-feat"); if (!el) return;
-    var r = await sb.from("reviews").select("id,rating,body,created_at,profiles!reviews_user_id_fkey(username),likes(user_id)").eq("tmdb_id", id).neq("body", "").limit(40);
+    var r = await sb.from("reviews").select("id,rating,body,spoiler,created_at,profiles!reviews_user_id_fkey(username),likes(user_id)").eq("tmdb_id", id).neq("body", "").limit(40);
     if (fEl._id !== id || r.error) return;
     var l = (r.data || []).sort(function (a, b) { return b.likes.length - a.likes.length || (a.created_at < b.created_at ? 1 : -1); }).slice(0, 5);
     if (!l.length) { el.innerHTML = ""; return; }
     el.innerHTML = '<div class="fp-sub">À la une</div><div class="fp-hs">' + l.map(function (x) {
       var u = x.profiles.username;
-      return '<div class="fp-fc"><div class="who" style="margin:0 0 6px"><div class="av" style="--c:' + A.col(u) + ';color:#fff;width:28px;height:28px;font-size:11px">' + ini(u) + '</div><button class="un" data-u="' + E(u) + '">' + E(u) + '</button></div><div class="fp-st">' + fpstars(Number(x.rating)) + '</div><p class="fp-fx">' + E(x.body) + '</p><small>' + IC("heart") + x.likes.length + '</small></div>';
+      return '<div class="fp-fc"><div class="who" style="margin:0 0 6px"><div class="av" style="--c:' + A.col(u) + ';color:#fff;width:28px;height:28px;font-size:11px">' + ini(u) + '</div><button class="un" data-u="' + E(u) + '">' + E(u) + '</button></div><div class="fp-st">' + fpstars(Number(x.rating)) + '</div>' + SPO(x.spoiler, '<p class="fp-fx">' + E(x.body) + '</p>') + '<small>' + IC("heart") + x.likes.length + '</small></div>';
     }).join("") + '</div>';
   }
-  function filmObj() { return { id: fEl._id, title: fEl._t, poster_path: fEl._p, year: fEl._y }; }
   function openWrite() { openCompose(filmObj()); }
 
   // ---- Interactions
   fEl.addEventListener("click", function (e) {
     var t = e.target, q = t.closest("[data-q]");
     if (q && !q.disabled) { var r = q.getBoundingClientRect(), v = +q.dataset.q - (e.clientX - r.left < r.width / 2 ? .5 : 0); setStarsUI(v); return void saveRating(v); }
+    if (t.closest("[data-seen]")) return toggleSeen();
+    var rr = t.closest("[data-react]"); if (rr) return setReact(+rr.dataset.react);
+    if (t.closest("[data-fr]")) { firstRw = !firstRw; return paintMine(); }
     if (t.closest("[data-rw]")) { rewatch = true; paintMine(); return toast("Mode revisionnage : donne ta nouvelle note"); }
     if (t.closest("[data-rwc]")) { rewatch = false; paintMine(); return; }
+    var we = t.closest("[data-we],[data-wedit]"); if (we) return openCompose(filmObj(), { editId: +(we.dataset.we || we.dataset.wedit) });
+    var wd = t.closest("[data-wd]"); if (wd) return delWatch(+wd.dataset.wd);
+    if (t.closest("[data-delcrit]")) return delCrit();
     if (t.closest("[data-rwcrit]")) return openCompose(filmObj(), { rewatch: true });
     if (t.closest('[data-a="write"]')) return openWrite();
     var v2 = t.closest("[data-v]"); if (v2) return modal('<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v2.dataset.v) + '?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>');
