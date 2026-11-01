@@ -25,7 +25,8 @@ Le design de Clap, branché sur TMDB : recherche, tendances et fiche film compl�
 7. **Notes rapides** : colle `supabase-6-notes.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
 8. **Calendrier** : colle `supabase-7-calendrier.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
 9. **Avis, spoilers, statistiques, J'aime** : colle `supabase-8-avis-stats.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne, sinon les listes de critiques affichent une erreur).
-10. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
+10. **Icônes de revisionnage** : colle `supabase-9-revisionnages.sql` dans le SQL Editor et clique *Run* (avant la mise en ligne).
+11. Relance `npm start`, clique sur 👤 en haut à droite et crée un compte.
 La clé de `public/config.js` est la clé « anon » : elle est publique par conception. Ne mets **jamais** la clé « service_role » dans ce projet.
 
 ## Bon à savoir
@@ -78,3 +79,8 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - `public/profile2.js` : « Notes et critiques » avec « Afficher plus » + statistiques (films vus, revisionnages, temps passé, répartition des notes, genres, décennies, réalisateurs, activité sur 12 mois, séries, records). Les infos de film (durée, genres…) sont stockées dans `watches.meta` ; pour les anciens films elles sont récupérées par lots de 12 à chaque visite du profil.
 - Table `film_reactions` : J'aime / Je n'aime pas (base des futures recommandations).
 - Flèche discrète « remonter » : `#totop`, visible quand on a défilé de plus de 500 px (profil, page film, découvrir, activité).
+
+## Revisionnages
+- Modifier un visionnage : l'interrupteur « C'est un revisionnage » ne fait que poser le drapeau « revu », sans rien réinitialiser. « Ajouter un nouveau visionnage » (ou « Revoir et critiquer ») crée un nouveau visionnage vide.
+- Icône « revu » (`RWB()` dans `public/diary.js`) : critiques de la page film, « À la une », fil, notes du profil, activité, historique ; pastille ronde sur les jours du calendrier.
+- Attention aux noms de classes CSS : ne pas réutiliser celles du site (ex. `.st`, `.pop`).

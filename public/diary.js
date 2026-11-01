@@ -7,6 +7,7 @@
   var st = document.createElement("style");
   st.textContent = `.sp{position:relative;border-radius:10px;overflow:hidden}.sp .sp-t{filter:blur(9px);user-select:none;pointer-events:none;transition:filter .3s}
 .sp .sp-b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;font-weight:700;font-size:13px;color:inherit;background:rgba(128,128,128,.14)}.sp.sp-open .sp-t{filter:none;user-select:auto;pointer-events:auto}.sp.sp-open .sp-b{display:none}
+.rw-b{display:inline-flex;align-items:center;gap:3px;margin-left:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(128,128,128,.24);color:var(--muted);vertical-align:1px;font-family:"DM Sans",sans-serif;letter-spacing:0}.rw-b .ic{width:12px;height:12px;margin:0}
 #totop{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);z-index:16;width:38px;height:38px;border-radius:50%;background:var(--bar);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;font-size:18px;opacity:.88;box-shadow:0 6px 18px rgba(0,0,0,.25);animation:dyin .25s}#totop[hidden]{display:none}@keyframes dyin{from{opacity:0;transform:translateY(10px)}}
 #cfm{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:24px;animation:dyin .2s}#cfm[hidden]{display:none}
 .cfm-c{width:100%;max-width:340px;background:var(--surface);color:var(--text);border-radius:20px;padding:20px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.5)}.cfm-c b{font:400 26px/1 "Bebas Neue",sans-serif;letter-spacing:.04em}.cfm-c p{margin:8px 0 16px;color:var(--muted)}
@@ -16,6 +17,9 @@
   // ---- Spoilers : le texte est flouté derrière un bouton
   window.SPO = function (sp, html) { return sp ? '<div class="sp"><div class="sp-t">' + html + '</div><button class="sp-b" data-sp="1">' + IC("eyeoff") + 'Spoiler · Afficher</button></div>' : html; };
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-sp]"); if (!b) return; e.stopPropagation(); e.preventDefault(); b.parentNode.classList.add("sp-open"); }, true);
+
+  // Petite icône « revu » (avec le nombre de visionnages) à côté des étoiles
+  window.RWB = function (r) { return r && r.rewatched ? '<span class="rw-b" title="Revu' + (r.views > 1 ? " " + r.views + " fois" : "") + '">' + IC("rotate") + (r.views > 1 ? "×" + r.views : "") + '</span>' : ""; };
 
   // ---- Fenêtre de confirmation
   var app = document.querySelector(".app"), cfm = document.createElement("div"); cfm.id = "cfm"; cfm.hidden = true; app.appendChild(cfm);
@@ -55,11 +59,15 @@
     var me = A.me(), rows = await list(f.id); if (rows === null) return false;
     var rated = rows.filter(function (x) { return x.rating != null; })[0], texted = rows.filter(function (x) { return x.body; })[0];
     if (!rated) { await sb.from("reviews").delete().eq("user_id", me.id).eq("tmdb_id", f.id); return true; }
-    await sb.from("reviews").upsert({ tmdb_id: f.id, title: f.title, poster_path: f.poster_path || null, rating: rated.rating, body: texted ? texted.body : "", spoiler: texted ? !!texted.spoiler : false }, { onConflict: "user_id,tmdb_id" });
+    var base = { tmdb_id: f.id, title: f.title, poster_path: f.poster_path || null, rating: rated.rating, body: texted ? texted.body : "", spoiler: texted ? !!texted.spoiler : false };
+    var again = { rewatched: rows.length > 1 || rows.some(function (x) { return x.rewatch; }), views: rows.length };
+    var r = await sb.from("reviews").upsert(Object.assign({}, base, again), { onConflict: "user_id,tmdb_id" });
+    if (r.error) await sb.from("reviews").upsert(base, { onConflict: "user_id,tmdb_id" }); // base pas encore mise à jour
     return true;
   }
   async function add(f, o) {
-    var row = { tmdb_id: f.id, title: f.title, poster_path: f.poster_path || null, watched_on: o.date || today(), rating: o.rating == null ? null : o.rating, body: o.body || "", spoiler: !!o.body && !!o.spoiler, rewatch: !!o.rewatch };
+    var before = await list(f.id);
+    var row = { tmdb_id: f.id, title: f.title, poster_path: f.poster_path || null, watched_on: o.date || today(), rating: o.rating == null ? null : o.rating, body: o.body || "", spoiler: !!o.body && !!o.spoiler, rewatch: !!o.rewatch || !!(before && before.length) };
     if (o.meta) row.meta = o.meta;
     var r = await sb.from("watches").insert(row); if (r.error) return { error: r.error };
     await sync(f); if (!o.meta) enrich(f.id); return {};

@@ -14,10 +14,10 @@
     '.cs-date{width:100%;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit;font-size:16px}' +
     '.cs-rw{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}.cs-rw .ic{width:22px;height:22px;color:var(--accent);flex:none}' +
     '.cs-sw{position:relative;width:48px;height:28px;border-radius:99px;background:rgba(128,128,128,.4);flex:none;transition:background .2s}.cs-sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 2px 6px rgba(0,0,0,.3)}.cs-sw.cs-on{background:var(--accent)}.cs-sw.cs-on::after{transform:translateX(20px)}' +
-    '.cs-delw{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:22px;padding:13px;border-radius:14px;border:1px solid #e5484d;color:#e5484d;font-weight:700}.cs-delw .ic{width:18px;height:18px}';
+    '.cs-lnk{display:flex;align-items:center;gap:6px;margin-top:10px;color:var(--accent);font-weight:700;font-size:14px}.cs-lnk .ic{width:16px;height:16px}.cs-delw{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:22px;padding:13px;border-radius:14px;border:1px solid #e5484d;color:#e5484d;font-weight:700}.cs-delw .ic{width:18px;height:18px}';
   document.head.appendChild(st);
 
-  var sel = null, cur = { rows: [], edit: null, rewatch: false, spoiler: false }, results = [], opt = {}, tm;
+  var sel = null, cur = { rows: [], edit: null, mode: "new", flag: false, spoiler: false }, results = [], opt = {}, tm;
   function tpl() {
     return '<div class="cbar"><button class="ico" data-a="x" aria-label="Fermer">' + IC("x") + '</button><b id="cs-title">Nouvelle critique</b><button class="btn main" data-a="pub">Publier</button></div><div class="pad">' +
       '<p class="lbl" style="margin-top:4px">Film</p><div class="cs-bar" id="cs-bar"></div><div class="cs-res" id="cs-res" hidden></div>' +
@@ -40,26 +40,23 @@
   function setSw(id, on) { var sw = document.getElementById(id); if (sw) { sw.classList.toggle("cs-on", on); sw.setAttribute("aria-checked", String(on)); } }
   function setSpoiler(on) { cur.spoiler = on; setSw("cs-spsw", on); }
   function head() {
-    var editing = !!cur.edit && !cur.rewatch; document.getElementById("cs-title").textContent = editing ? "Modifier mon avis" : "Nouvelle critique";
+    var editing = cur.mode === "edit" && !!cur.edit; document.getElementById("cs-title").textContent = editing ? "Modifier mon avis" : "Nouvelle critique";
     document.getElementById("cs-delrow").innerHTML = editing ? '<button class="cs-delw" data-delw="1">' + IC("trash") + 'Supprimer ce visionnage</button>' : "";
   }
-  function fillFrom(w) { setRating(w.rating != null ? Number(w.rating) : 0); setText(w.body || ""); setSpoiler(!!w.spoiler); document.getElementById("cd").value = w.watched_on; }
   function paintRw() {
-    var n = cur.rows.length;
-    document.getElementById("cs-rwbox").innerHTML = '<div class="cs-rw">' + IC("rotate") + '<div style="flex:1"><b>' + (n ? "J’ai revu ce film" : "Je l’avais déjà vu avant") + '</b><br><small style="color:var(--muted)">' +
-      (n ? "Déjà vu " + n + " fois. Active pour ajouter un nouveau visionnage à la date choisie." : "Compte ce visionnage comme un revisionnage dans tes statistiques.") + '</small></div><button class="cs-sw" id="cs-sw" data-rw2="1" role="switch" aria-checked="false" aria-label="Revisionnage"></button></div>';
+    var n = cur.rows.length, box = document.getElementById("cs-rwbox"), sw = '<button class="cs-sw' + (cur.flag ? " cs-on" : "") + '" id="cs-sw" data-rw2="1" role="switch" aria-checked="' + cur.flag + '" aria-label="Revisionnage"></button>';
+    if (cur.mode === "edit" && cur.edit) box.innerHTML = '<div class="cs-rw">' + IC("rotate") + '<div style="flex:1"><b>C’est un revisionnage</b><br><small style="color:var(--muted)">Affiche l’icône « revu » sur ce visionnage. Rien d’autre ne change.</small></div>' + sw + '</div><button class="cs-lnk" data-newv="1">' + IC("plus") + 'Ajouter un nouveau visionnage</button>';
+    else if (n) box.innerHTML = '<div class="cs-rw">' + IC("rotate") + '<div style="flex:1"><b>Nouveau visionnage</b><br><small style="color:var(--muted)">Déjà vu ' + n + ' fois. Il sera ajouté et compté comme revisionnage.</small></div></div><button class="cs-lnk" data-editv="1">Modifier mon dernier visionnage à la place</button>';
+    else box.innerHTML = '<div class="cs-rw">' + IC("rotate") + '<div style="flex:1"><b>Je l’avais déjà vu avant</b><br><small style="color:var(--muted)">Compte ce visionnage comme un revisionnage dans tes statistiques.</small></div>' + sw + '</div>';
   }
-  function toggleRw(on) {
-    cur.rewatch = on; setSw("cs-sw", on);
-    if (cur.rows.length) { if (on) { setRating(0); setText(""); setSpoiler(false); document.getElementById("cd").value = today(); } else if (cur.edit) fillFrom(cur.edit); }
-    head();
-  }
+  function fillFrom(w) { setRating(w.rating != null ? Number(w.rating) : 0); setText(w.body || ""); setSpoiler(!!w.spoiler); document.getElementById("cd").value = w.watched_on; }
+  function toEdit(w) { cur.mode = "edit"; cur.edit = w; cur.flag = !!w.rewatch; fillFrom(w); paintRw(); head(); }
+  function toNew() { cur.mode = "new"; cur.edit = null; cur.flag = true; setRating(0); setText(""); setSpoiler(false); document.getElementById("cd").value = today(); paintRw(); head(); }
   async function pick(f) {
-    sel = f; cur = { rows: [], edit: null, rewatch: false, spoiler: false }; bar(); document.getElementById("cs-res").hidden = true; paintRw(); head();
+    sel = f; cur = { rows: [], edit: null, mode: "new", flag: false, spoiler: false }; bar(); document.getElementById("cs-res").hidden = true; paintRw(); head();
     var rows = await D().list(f.id); if (sel !== f) return; cur.rows = rows || [];
-    if (opt.editId) cur.edit = cur.rows.filter(function (w) { return w.id === opt.editId; })[0] || null; else if (cur.rows.length && !opt.rewatch) cur.edit = cur.rows[0];
-    paintRw();
-    if (opt.rewatch) toggleRw(true); else if (cur.edit) { fillFrom(cur.edit); head(); }
+    var w = opt.editId ? cur.rows.filter(function (x) { return x.id === opt.editId; })[0] : null;
+    if (w) toEdit(w); else if (cur.rows.length && opt.rewatch) toNew(); else if (cur.rows.length && !opt.rewatch) toEdit(cur.rows[0]); else { cur.flag = !!opt.rewatch; paintRw(); head(); }
   }
   function search(q) {
     fetch("/api/" + (q ? "search?q=" + encodeURIComponent(q) : "trending")).then(function (r) { return r.json(); }).then(function (r) {
@@ -71,7 +68,7 @@
     }).catch(function () {});
   }
   window.openCompose = function (f, o) {
-    opt = o || {}; cs = { n: 0, tags: [], p: "" }; sel = null; cur = { rows: [], edit: null, rewatch: false, spoiler: false };
+    opt = o || {}; cs = { n: 0, tags: [], p: "" }; sel = null; cur = { rows: [], edit: null, mode: "new", flag: false, spoiler: false };
     cEl.innerHTML = tpl(); document.getElementById("cd").value = opt.date || today(); bar();
     if (typeof f === "string") { var a = all.filter(function (x) { return x[0] === f; })[0]; f = a && a[2] ? { id: a[2], title: a[0], poster_path: a[3] || null } : null; }
     if (f) pick({ id: f.id, title: f.title, poster_path: f.poster_path || null, year: f.year || (f.release_date || "").slice(0, 4) });
@@ -82,10 +79,12 @@
   cEl.addEventListener("focusin", function (e) { if (e.target.id === "cq" && !sel && !e.target.value) search(""); });
   cEl.addEventListener("click", async function (e) {
     var x = e.target.closest("[data-cx]");
-    if (x) { var had = !!cur.edit; sel = null; cur = { rows: [], edit: null, rewatch: false, spoiler: false }; if (had) { setRating(0); setText(""); setSpoiler(false); } bar(); paintRw(); document.getElementById("cs-rwbox").innerHTML = ""; head(); $("#cq").focus(); return; }
+    if (x) { var had = cur.mode === "edit" && !!cur.edit; sel = null; cur = { rows: [], edit: null, mode: "new", flag: false, spoiler: false }; if (had) { setRating(0); setText(""); setSpoiler(false); } bar(); document.getElementById("cs-rwbox").innerHTML = ""; head(); $("#cq").focus(); return; }
     var r = e.target.closest(".cs-r");
     if (r) { var m = results[+r.dataset.i]; return void pick({ id: m.id, title: m.title, poster_path: m.poster_path || null, year: (m.release_date || "").slice(0, 4) }); }
-    if (e.target.closest("[data-rw2]")) return toggleRw(!cur.rewatch);
+    if (e.target.closest("[data-rw2]")) { cur.flag = !cur.flag; return setSw("cs-sw", cur.flag); }   // simple drapeau : ne touche à rien d'autre
+    if (e.target.closest("[data-newv]")) return toNew();
+    if (e.target.closest("[data-editv]")) return cur.rows[0] && toEdit(cur.rows[0]);
     if (e.target.closest("[data-sp2]")) return setSpoiler(!cur.spoiler);
     if (e.target.closest("[data-delw]") && cur.edit) {
       var ok = await CONFIRM("Supprimer ce visionnage ?", "Il disparaîtra de ton calendrier et de tes statistiques.", "Supprimer"); if (!ok) return;
@@ -98,9 +97,9 @@
     if (!sel) { toast("Choisis d’abord un film"); var q = $("#cq"); if (q) q.focus(); return; }
     if (!cs.n) return toast("Choisis une note");
     var d = document.getElementById("cd").value || today(); if (d > today()) return toast("La date ne peut pas être dans le futur");
-    var body = document.getElementById("ct").value.trim(), editing = cur.edit && !cur.rewatch; b.disabled = true;
-    var res = editing ? await D().update(cur.edit.id, sel, { watched_on: d, rating: cs.n, body: body, spoiler: !!body && cur.spoiler })
-      : await D().add(sel, { date: d, rating: cs.n, body: body, spoiler: cur.spoiler, rewatch: cur.rewatch });
+    var body = document.getElementById("ct").value.trim(), editing = cur.mode === "edit" && !!cur.edit; b.disabled = true;
+    var res = editing ? await D().update(cur.edit.id, sel, { watched_on: d, rating: cs.n, body: body, spoiler: !!body && cur.spoiler, rewatch: cur.flag })
+      : await D().add(sel, { date: d, rating: cs.n, body: body, spoiler: cur.spoiler, rewatch: cur.flag || cur.rows.length > 0 });
     b.disabled = false; if (res.error) return toast("Publication impossible : " + res.error.message);
     toast(editing ? "Modifications enregistrées" : "Critique publiée"); closeAndRefresh(sel.id);
   }, true);

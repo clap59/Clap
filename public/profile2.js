@@ -6,7 +6,7 @@
   var MO = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."], MOL = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"], DAYS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
   var st = document.createElement("style");
   st.textContent = `.act-ctl{display:flex;gap:8px;margin-top:6px}.act-ctl button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted)}.st-cnt{font:500 13px "DM Sans",sans-serif;color:var(--muted);letter-spacing:0;margin-left:6px}
-.st{text-align:left}.st-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.st-t{padding:12px 8px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:center;min-width:0}.st-t b{display:block;font:400 30px/1 "Bebas Neue",sans-serif;letter-spacing:.03em}.st-t span{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.25}.st-t small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.stx{text-align:left}.st-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.st-t{padding:12px 8px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:center;min-width:0}.st-t b{display:block;font:400 30px/1 "Bebas Neue",sans-serif;letter-spacing:.03em}.st-t span{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.25}.st-t small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
 .st-h{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin:20px 0 8px}.st-card{padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
 .st-r{display:grid;grid-template-columns:88px 1fr 30px;gap:8px;align-items:center;font-size:13px;margin:6px 0}.st-r span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.st-tr{height:10px;border-radius:9px;background:rgba(128,128,128,.2);overflow:hidden}.st-tr i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--accent),#ff9f43);transition:width 1s cubic-bezier(.2,.8,.2,1)}.st-r b{text-align:right;font-variant-numeric:tabular-nums}
 .st-cols{display:flex;align-items:flex-end;gap:4px;height:110px}.st-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10px;color:var(--muted);min-width:0}.st-col i{display:block;width:100%;min-height:2px;height:0;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#ff9f43,var(--accent));transition:height 1s cubic-bezier(.2,.8,.2,1)}.st-col em{font-style:normal;font-size:10px;margin-bottom:2px;color:var(--text)}.st-col span{margin-top:4px}
@@ -17,7 +17,7 @@
   function crit(el, uid, mine) {
     var list = [], shown = 8, STEP = 8;
     async function load() {
-      var r = await sb.from("reviews").select("id,tmdb_id,title,poster_path,rating,body,spoiler,created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(300);
+      var r = await sb.from("reviews").select("id,tmdb_id,title,poster_path,rating,body,spoiler,rewatched,views,created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(300);
       list = r.error ? [] : (r.data || []); paint();
     }
     function paint() {
@@ -78,7 +78,7 @@
       var hrs = Math.round(minutes / 60), t = function (n, l, s) { return '<div class="st-t"><b>' + n + '</b><span>' + l + '</span>' + (s ? "<small>" + s + "</small>" : "") + '</div>'; };
       var hb = function (l) { var mx = Math.max.apply(null, l.map(function (x) { return x[1]; })) || 1; return l.map(function (x) { return '<div class="st-r"><span>' + E(x[0]) + '</span><span class="st-tr"><i data-w="' + (x[1] / mx * 100) + '%"></i></span><b>' + x[1] + '</b></div>'; }).join(""); };
       var mxd = Math.max.apply(null, dist) || 1, mxm = Math.max.apply(null, mon.map(function (m) { return m.n; })) || 1;
-      el.innerHTML = '<div class="st"><div class="st-g">' + t(films, "films vus") + t(W.length, "visionnages") + t(rew, "revisionnages") +
+      el.innerHTML = '<div class="stx"><div class="st-g">' + t(films, "films vus") + t(W.length, "visionnages") + t(rew, "revisionnages") +
         t(minutes ? hrs + " h" : "–", "temps passé", minutes ? "≈ " + nf(minutes / 1440) + " jours" : "") + t(avg != null ? nf(avg) : "–", "note moyenne", ratings.length + " films notés") + t(written, "critiques écrites") +
         t(up, "J’aime") + t(down, "Je n’aime pas") + t(lists, "listes") + '</div>' +
         (ratings.length ? '<div class="st-h">Répartition des notes</div><div class="st-card"><div class="st-cols">' + dist.map(function (n, j) { return '<div class="st-col"><em>' + (n || "") + '</em><i data-h="' + (n / mxd * 100) + '%"></i><span>' + nf((j + 1) / 2, j % 2 ? 0 : 1) + '</span></div>'; }).join("") + '</div></div>' : "") +

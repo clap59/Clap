@@ -19,10 +19,10 @@
   function item(r, u, own) {
     return '<div class="act-i" data-f="' + r.tmdb_id + '">' + (r.poster_path ? '<img src="' + IMG + r.poster_path + '" alt="">' : '<div class="nop"></div>') +
       '<div style="min-width:0;flex:1">' + (u ? '<div class="who" style="margin:0 0 4px">' + av(u, 26) + '<button class="un" data-u="' + esc(u) + '">' + esc(u) + '</button><small style="color:var(--muted);margin-left:auto">' + ago(r.created_at) + '</small></div>' : '<small style="color:var(--muted)">' + ago(r.created_at) + '</small><br>') +
-      '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + '</div>' + (r.body ? SPO(r.spoiler, more(esc(r.body), "")) : "") + (own ? '<div class="act-ctl"><button data-ce="' + r.tmdb_id + '" aria-label="Modifier">' + IC("edit") + '</button><button data-cd="' + r.tmdb_id + '" aria-label="Supprimer">' + IC("trash") + '</button></div>' : "") + '</div></div>';
+      '<b>' + esc(r.title) + '</b><div class="stars">' + stars(Number(r.rating)) + RWB(r) + '</div>' + (r.body ? SPO(r.spoiler, more(esc(r.body), "")) : "") + (own ? '<div class="act-ctl"><button data-ce="' + r.tmdb_id + '" aria-label="Modifier">' + IC("edit") + '</button><button data-cd="' + r.tmdb_id + '" aria-label="Supprimer">' + IC("trash") + '</button></div>' : "") + '</div></div>';
   }
   window.CLAP_ITEM = function () { return item.apply(null, arguments); };
-  var cols = "id,tmdb_id,title,poster_path,rating,body,spoiler,created_at";
+  var cols = "id,tmdb_id,title,poster_path,rating,body,spoiler,rewatched,views,created_at";
   function bioHTML(u) {
     var f = u.fav_films || [];
     return (u.bio ? '<p style="margin:8px 0">' + esc(u.bio) + '</p>' : "") + (f.length ? '<h2 style="margin:14px 0 8px">Ses ' + f.length + ' favoris</h2><div class="grid" style="grid-template-columns:repeat(5,1fr)">' + f.map(function (x) { return '<button class="po" data-id="' + x.id + '" title="' + esc(x.title) + '" style="--g:' + (x.poster ? "url(https://image.tmdb.org/t/p/w185" + x.poster + ") center/cover" : "var(--line)") + '"><span></span></button>'; }).join("") + '</div>' : "");
