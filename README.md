@@ -84,3 +84,9 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - Modifier un visionnage : l'interrupteur « C'est un revisionnage » ne fait que poser le drapeau « revu », sans rien réinitialiser. « Ajouter un nouveau visionnage » (ou « Revoir et critiquer ») crée un nouveau visionnage vide.
 - Icône « revu » (`RWB()` dans `public/diary.js`) : critiques de la page film, « À la une », fil, notes du profil, activité, historique ; pastille ronde sur les jours du calendrier.
 - Attention aux noms de classes CSS : ne pas réutiliser celles du site (ex. `.st`, `.pop`).
+
+## Découvrir (façon Netflix)
+- `server.js` : `/api/home` (À la une + une vingtaine de lignes : Top 10 monde, Top 10 France, genres, cultes par décennie, pépites…, mis en cache 30 min), `/api/recs/:id`, `/api/discover`, `/api/person-search`, `/api/franchises` et `/api/franchise/:slug` (toujours dans l'ordre de sortie, mis en cache 24 h). Les franchises sont définies en haut du bloc `FRANCHISES` : pour en ajouter une, ajoute une ligne avec le nom de sa collection TMDB.
+- `public/discover.js` : diaporama « À la une », lignes avec Top 10 numérotés, badge « vu », recherche, onglet Franchises avec progression et bouton « Reprendre ».
+- Recommandations : tes J'aime, tes notes (3,5 et plus) et tes visionnages servent de point de départ. On propose « Parce que tu as aimé… », ton genre et ton réalisateur préférés, et on masque les films déjà vus ou que tu n'aimes pas.
+- Le « Top 10 France » est approché par la popularité des films à l'affiche en France (TMDB ne publie pas de classement par pays).
