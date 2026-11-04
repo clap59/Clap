@@ -34,7 +34,8 @@
   var tt = document.createElement("button"); tt.id = "totop"; tt.hidden = true; tt.setAttribute("aria-label", "Remonter en haut"); tt.innerHTML = IC("up"); app.appendChild(tt);
   function scroller() {
     var f = document.getElementById("film"), p = document.getElementById("pub");
-    if (f && f.classList.contains("open")) return f; if (p && p.classList.contains("open")) return p;
+    var fr = document.getElementById("fr");
+    if (f && f.classList.contains("open")) return f; if (p && p.classList.contains("open")) return p; if (fr && fr.classList.contains("open")) return fr;
     var v = document.querySelector(".view.on"); return v && v.id !== "feed" ? v : null;
   }
   setInterval(function () { if (document.hidden) return; var s = scroller(); tt.hidden = !(s && s.scrollTop > 500); }, 300);
