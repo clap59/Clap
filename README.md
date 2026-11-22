@@ -90,3 +90,13 @@ Sur l'offre gratuite, le site s'endort après un moment sans visite : le premier
 - `public/discover.js` : diaporama « À la une », lignes avec Top 10 numérotés, badge « vu », recherche, onglet Franchises avec progression et bouton « Reprendre ».
 - Recommandations : tes J'aime, tes notes (3,5 et plus) et tes visionnages servent de point de départ. On propose « Parce que tu as aimé… », ton genre et ton réalisateur préférés, et on masque les films déjà vus ou que tu n'aimes pas.
 - Le « Top 10 France » est approché par la popularité des films à l'affiche en France (TMDB ne publie pas de classement par pays).
+
+## Affichage adaptatif (téléphone, tablette, ordinateur)
+- `public/responsive.css` (chargé en dernier) : 
+  - moins de 720 px : barre en bas (téléphone) ;
+  - 720 px et plus, ou téléphone en paysage : barre latérale compacte (icônes) ;
+  - 1100 px et plus (hauteur 560 px minimum) : barre latérale complète avec libellés et bouton « Nouvelle critique » ;
+  - très grands écrans (1600 px et plus) : la page Découvrir s'élargit.
+  Sur ordinateur, la fenêtre de critique devient une boîte de dialogue centrée, les pages film / franchise s'ouvrent à droite de la barre latérale et leur contenu est centré.
+- `public/scrollers.js` : flèches gauche/droite sur les lignes qui défilent (souris), touche Échap pour fermer fenêtres et pages, changer d'onglet ferme la page ouverte par-dessus.
+- Les points de rupture sont tout en haut de `responsive.css` : on peut les ajuster sans toucher au reste.
